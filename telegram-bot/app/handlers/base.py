@@ -11,7 +11,10 @@ router = Router(name=__name__)
     description="Start the bot",
 )
 async def send_welcome(message: types.Message):
-    return "Hello! I'm Awasara!\nI collect best opportunities from different sources just for you!"
+    return [
+        "Hello! I'm Awasara!\nI collect best opportunities from different sources just for you!",
+        "You can use /register command to create an account."
+    ]
 
 
 @router.register(

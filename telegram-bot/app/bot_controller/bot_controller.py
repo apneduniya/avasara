@@ -11,7 +11,7 @@ from app import handlers
 
 class BotController:
     MIDDLEWARES = [
-        middlewares.LoggingMiddleware,
+        middlewares.AutoAnswerMiddleware,
     ]
 
     ROUTERS = [

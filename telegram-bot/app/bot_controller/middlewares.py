@@ -6,7 +6,7 @@ from aiogram import types
 from app.helpers.logs import log_bot_incomming_message, log_bot_outgoing_message
 
 
-class LoggingMiddleware(BaseMiddleware):
+class AutoAnswerMiddleware(BaseMiddleware):
     async def __call__(
         self,
         handler: t.Callable[[types.TelegramObject, t.Dict[str, t.Any]], t.Awaitable[t.Any]],
@@ -20,4 +20,8 @@ class LoggingMiddleware(BaseMiddleware):
         log_bot_outgoing_message(message, result)
 
         if result is not None:
-            await message.reply(text=result, disable_web_page_preview=False)
+            if isinstance(result, list):
+                for item in result:
+                    await message.answer(text=item, disable_web_page_preview=False)
+                return
+            await message.answer(text=result, disable_web_page_preview=False)
