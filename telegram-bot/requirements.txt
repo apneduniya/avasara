@@ -1,0 +1,9 @@
+aiogram
+python-dotenv
+aiohttp
+asyncio
+logging
+typing
+requests
+urllib3
+pydantic_settings
