@@ -25,5 +25,18 @@ async def help(message: types.Message):
     return "\n".join(router.command_list)
 
 
+@router.register(
+    command="register",
+    description="Register an account",
+)
+async def register(message: types.Message):
+    return "Send your resume to start the registration process."
+
+
+@router.register()
+async def common(message: types.Message):
+    ...
+
+
 
 

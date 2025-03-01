@@ -11,6 +11,7 @@ from app import handlers
 
 class BotController:
     MIDDLEWARES = [
+        # middlewares.SaveChatMiddleware,
         middlewares.AutoAnswerMiddleware,
     ]
 
