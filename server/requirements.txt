@@ -1,0 +1,13 @@
+python-dotenv
+fastapi
+typing
+apscheduler
+fastapi_restful
+python-multipart
+httpx
+uvicorn
+langchain
+composio_core
+crewai
+langchain_openai
+composio_crewai
