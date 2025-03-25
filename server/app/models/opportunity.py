@@ -1,5 +1,8 @@
 import typing as t
+from uuid import uuid4
+
 from app.models.base.base import BaseSchema
+
 
 
 class Opportunity(BaseSchema):
@@ -11,6 +14,5 @@ class Opportunity(BaseSchema):
     opportunity_type: t.Literal["job", "internship", "freelance", "hackathon", "scholarship", "fellowship", "grant", "internship", "other"]
     location: t.Optional[str] = "remote"
     compensation: t.Optional[str] = "variable"
-    application_link: str
-
+    know_more_link: str
 

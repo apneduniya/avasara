@@ -6,10 +6,10 @@ EXPECTED OUTPUT SCHEMA:
         "description": "str",  # short description
         "platform_name": "str",
         "deadline": "str",
-        "key_skills": "list",
+        "key_skills": "list", # list of skills required for the opportunity like content writing, video editing, python, rust, etc.
         "location": "str",  # optional, default is "remote"
         "compensation": "str",  # optional, default is "variable"
-        "application_link": "str",
+        "know_more_link": "str",
         "opportunity_type": "str"  # one of ["job", "internship", "freelance", "hackathon", "scholarship", "fellowship", "grant", "other"]
     }}
 
@@ -23,7 +23,7 @@ EXAMPLES:
     "key_skills": ["Python", "Django"],
     "location": "remote",
     "compensation": "variable",
-    "application_link": "https://example.com",
+    "know_more_link": "https://example.com",
     "opportunity_type": "job"
 }}
 --------------------------------------------
@@ -35,7 +35,7 @@ EXAMPLES:
     "key_skills": ["Adobe Premiere Pro"],
     "location": "bangalore",
     "compensation": "$2000/month",
-    "application_link": "https://example.com",
+    "know_more_link": "https://example.com",
     "opportunity_type": "freelance"
 }}
 --------------------------------------------
@@ -47,7 +47,7 @@ EXAMPLES:
     "key_skills": ["Python", "Machine Learning", "Gen AI"],
     "location": "remote",
     "compensation": "$1000",
-    "application_link": "https://example.com",
+    "know_more_link": "https://example.com",
     "opportunity_type": "freelance"
 }}
 --------------------------------------------
@@ -68,7 +68,7 @@ PROMPT = """Given the opportunity, convert/reformat it to a formatted and valid 
     "key_skills": "list",
     "location": "str",  # optional, default is "remote"
     "compensation": "str",  # optional, default is "variable"
-    "application_link": "str",
+    "know_more_link": "str",
     "opportunity_type": "str"  # one of ["job", "internship", "freelance", "hackathon", "scholarship", "fellowship", "grant", "other"]
 }}
 
