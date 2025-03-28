@@ -11,7 +11,6 @@ import Image from "next/image";
 export default function Navbar() {
     return (
         <header className="fixed top-0 z-[999999] w-full px-8 py-2">
-            <div className="fade-bottom absolute left-0 h-24 w-full bg-background/15 backdrop-blur-lg"></div>
             <div className="relative mx-auto max-w-container">
                 <NavbarComponent>
                     <NavbarLeft>
@@ -25,7 +24,7 @@ export default function Navbar() {
                     </NavbarLeft>
                     <NavbarRight>
                         <Button variant="default" asChild>
-                            <Link href="/">Get Started</Link>
+                            <Link href="/register">Get Started</Link>
                         </Button>
                     </NavbarRight>
                 </NavbarComponent>
