@@ -10,7 +10,7 @@ import Image from "next/image";
 
 export default function Navbar() {
     return (
-        <header className="fixed top-0 z-[999999] w-full px-8 py-2">
+        <header className="fixed top-0 z-50 w-full px-8 py-2 backdrop-blur-sm border-b bg-[var(--background)] border-slate-800">
             <div className="relative mx-auto max-w-container">
                 <NavbarComponent>
                     <NavbarLeft>

@@ -132,6 +132,14 @@
 
 * {
   box-sizing: border-box;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  /* -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; */
 }
 
 html {
@@ -139,7 +147,29 @@ html {
 }
 
 body {
+  padding: 0;
+  margin: 0;
   min-height: 100dvh;
-  background-color: var(--background);
-  color: var(--foreground);
+  height: auto;
+  width: 100%;
+  overflow-x: hidden;
+  --sb-track-color: transparent;
+  --sb-thumb-color: #444444;
+  --sb-size: 4px;
+
+  scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+}
+
+html::-webkit-scrollbar {
+  width: var(--sb-size);
+}
+
+html::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 10px;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 10px;
 }
