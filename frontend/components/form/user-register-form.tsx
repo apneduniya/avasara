@@ -134,7 +134,7 @@ export default function UserRegisterForm() {
                     ))}
 
                     <Button type="submit" className="w-full cursor-pointer">
-                        Submit
+                        Pay 0.05 EDU
                     </Button>
                 </form>
             </Form>
