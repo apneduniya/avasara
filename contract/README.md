@@ -11,3 +11,15 @@ REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat ignition deploy ./ignition/modules/Lock.js
 ```
+
+# Compile Avasara contract
+```shell
+npx hardhat compile
+```
+
+# Deploy Avasara contract
+```shell
+npx hardhat ignition deploy ./ignition/modules/Avasara.js --network opencampus
+```
+
+
