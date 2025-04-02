@@ -5,6 +5,7 @@ import { constructMetaData } from "@/utils/createMetadata";
 import Navbar from "@/components/layout/navbar";
 import { ThemeProvider } from "@/providers/theme-provider"
 import { Providers } from "@/providers";
+import { Toaster } from "@/components/ui/sonner";
 
 
 const geistSans = Geist({
@@ -40,6 +41,7 @@ export default function RootLayout({
                     >
                         <Navbar />
                         {children}
+                        <Toaster />
                     </ThemeProvider>
                 </Providers>
             </body>

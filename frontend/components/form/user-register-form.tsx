@@ -14,9 +14,13 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { createFormFieldMetadata, renderFormField } from "@/utils/createFormField";
+import { useAccount } from "wagmi";
+import { toast } from "sonner";
 
 
 export default function UserRegisterForm() {
+    const { isConnected } = useAccount();
+
     const form = useForm<z.infer<typeof userRegisterSchema>>({
         resolver: zodResolver(userRegisterSchema),
         defaultValues: {
@@ -36,24 +40,76 @@ export default function UserRegisterForm() {
     })
 
     function onSubmit(values: z.infer<typeof userRegisterSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
+        // validate if user has connected his wallet
+        if (!isConnected) {
+            toast.error("Please connect your wallet to register");
+            return;
+        }
+
         console.log(values);
     }
 
     const formFields = [
-        createFormFieldMetadata("fullName", "Full Name"),
-        createFormFieldMetadata("email", "Email"),
-        createFormFieldMetadata("location", "Location"),
-        createFormFieldMetadata("language", "Language", "select", "Select language", languages),
-        createFormFieldMetadata("telegramUsername", "Telegram Username"),
-        createFormFieldMetadata("professionalStatus", "Professional Status", "select", "Select professional status", professionalStatus),
-        createFormFieldMetadata("linkedinUrl", "LinkedIn URL", "url", "Enter LinkedIn profile URL", undefined, true),
-        createFormFieldMetadata("twitterUrl", "Twitter URL", "url", "Enter Twitter profile URL", undefined, true),
-        createFormFieldMetadata("portfolioLink", "Portfolio Link", "url", "Enter portfolio URL", undefined, true),
-        createFormFieldMetadata("primarySkills", "Primary Skills", "select", "Select primary skill", skills),
-        createFormFieldMetadata("secondarySkills", "Secondary Skills", "select", "Select secondary skill", skills),
-        createFormFieldMetadata("yearsOfExperience", "Years of Experience", "number", "Enter years of experience", undefined, true),
+        createFormFieldMetadata({ name: "fullName", label: "Full Name" }),
+        createFormFieldMetadata({ name: "email", label: "Email" }),
+        createFormFieldMetadata({ name: "location", label: "Location" }),
+        createFormFieldMetadata({ 
+            name: "language", 
+            label: "Language", 
+            type: "select", 
+            placeholder: "Select language", 
+            options: languages 
+        }),
+        createFormFieldMetadata({ name: "telegramUsername", label: "Telegram Username" }),
+        createFormFieldMetadata({ 
+            name: "professionalStatus", 
+            label: "Professional Status", 
+            type: "select", 
+            placeholder: "Select professional status", 
+            options: professionalStatus 
+        }),
+        createFormFieldMetadata({ 
+            name: "linkedinUrl", 
+            label: "LinkedIn URL", 
+            type: "url", 
+            placeholder: "Enter LinkedIn profile URL", 
+            isOptional: true 
+        }),
+        createFormFieldMetadata({ 
+            name: "twitterUrl", 
+            label: "Twitter URL", 
+            type: "url", 
+            placeholder: "Enter Twitter profile URL", 
+            isOptional: true 
+        }),
+        createFormFieldMetadata({ 
+            name: "portfolioLink", 
+            label: "Portfolio Link", 
+            type: "url", 
+            placeholder: "Enter portfolio URL", 
+            isOptional: true 
+        }),
+        createFormFieldMetadata({ 
+            name: "primarySkills", 
+            label: "Primary Skills", 
+            type: "select", 
+            placeholder: "Select primary skill", 
+            options: skills 
+        }),
+        createFormFieldMetadata({ 
+            name: "secondarySkills", 
+            label: "Secondary Skills", 
+            type: "select", 
+            placeholder: "Select secondary skill", 
+            options: skills 
+        }),
+        createFormFieldMetadata({ 
+            name: "yearsOfExperience", 
+            label: "Years of Experience", 
+            type: "number", 
+            placeholder: "Enter years of experience", 
+            isOptional: true 
+        }),
     ];
 
     return (

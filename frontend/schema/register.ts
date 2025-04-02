@@ -118,7 +118,8 @@ export const userRegisterSchema = z.object({
         message: "Please enter a valid portfolio URL",
     }).optional().or(z.literal('')),
 
-    yearsOfExperience: z.string()
+    // Sometimes I was recieving string and sometimes number from the form, so I'm using union to handle both cases
+    yearsOfExperience: z.union([z.string(), z.number()])
         .transform((val) => Number(val))
         .pipe(
             z.number().min(0, {
