@@ -1,8 +1,13 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.28;
 
-
 contract Avasara {
+    // Owner address
+    address public owner;
+    
+    // Registration fee in EDU
+    uint256 public constant REGISTRATION_FEE = 0.05 ether;
+
     // Enums for fixed options
     enum ProfessionalStatus {
         Student,
@@ -48,11 +53,22 @@ contract Avasara {
     // Events
     event UserRegistered(address indexed user, bytes32 ipfsHash);
     event ProfileUpdated(address indexed user, bytes32 ipfsHash);
+    event FeesWithdrawn(address indexed owner, uint256 amount);
 
     // Modifiers
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can call this function");
+        _;
+    }
+
     modifier onlyRegisteredUser() {
         require(userProfiles[msg.sender].exists, "User not registered");
         _;
+    }
+
+    // Constructor to set owner
+    constructor() {
+        owner = msg.sender;
     }
 
     // Register a new user
@@ -64,9 +80,10 @@ contract Avasara {
         ProfessionalStatus _status,
         Language _language,
         uint8 _yearsOfExperience
-    ) external {
+    ) external payable {
         require(!userProfiles[msg.sender].exists, "User already registered");
         require(_yearsOfExperience <= 50, "Invalid years of experience");
+        require(msg.value >= REGISTRATION_FEE, "Insufficient registration fee");
 
         userProfiles[msg.sender] = UserProfile({
             ipfsHash: _ipfsHash,
@@ -91,6 +108,17 @@ contract Avasara {
         usersByLocation[_location].push(msg.sender);
 
         emit UserRegistered(msg.sender, _ipfsHash);
+    }
+
+    // Function to withdraw collected fees
+    function withdrawFees() external onlyOwner {
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No fees to withdraw");
+        
+        (bool success, ) = owner.call{value: balance}("");
+        require(success, "Transfer failed");
+        
+        emit FeesWithdrawn(owner, balance);
     }
 
     // Update user profile
