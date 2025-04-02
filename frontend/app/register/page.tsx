@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { constructMetaData } from "@/utils/createMetadata";
+import { constructMetaData } from "@/utils/create-metadata";
 import UserRegisterForm from "@/components/form/user-register-form";
 
 export const metadata: Metadata = constructMetaData({
