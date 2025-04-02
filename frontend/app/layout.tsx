@@ -4,6 +4,7 @@ import "./globals.css";
 import { constructMetaData } from "@/utils/createMetadata";
 import Navbar from "@/components/layout/navbar";
 import { ThemeProvider } from "@/components/theme-provider"
+import { Providers } from "@/providers";
 
 
 const geistSans = Geist({
@@ -30,15 +31,17 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="dark"
-                    // enableSystem
-                    disableTransitionOnChange
-                >
-                    <Navbar />
-                    {children}
-                </ThemeProvider>
+                <Providers>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="dark"
+                        // enableSystem
+                        disableTransitionOnChange
+                    >
+                        <Navbar />
+                        {children}
+                    </ThemeProvider>
+                </Providers>
             </body>
         </html>
     );
