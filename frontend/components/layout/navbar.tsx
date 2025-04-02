@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button";
 import {
     Navbar as NavbarComponent,
     NavbarLeft,
@@ -8,6 +7,8 @@ import {
 } from "@/components/ui/navbar";
 import Link from "next/link";
 import Image from "next/image";
+import { navbarContents } from "@/static/navbar-contents";
+import NavbarCTAs from "@/components/common/navbar-ctas";
 
 
 export default function Navbar() {
@@ -17,17 +18,20 @@ export default function Navbar() {
                 <NavbarComponent>
                     <NavbarLeft>
                         <Link
-                            href="/"
+                            href={navbarContents.brand.href}
                             className="flex items-center gap-2 text-xl font-bold"
                         >
-                            <Image src="/logo/avasara.svg" alt="Avasara Logo" width={40} height={40} />
-                            <span>Avasara</span>
+                            <Image
+                                src={navbarContents.brand.logo.src}
+                                alt={navbarContents.brand.logo.alt}
+                                width={navbarContents.brand.logo.width}
+                                height={navbarContents.brand.logo.height}
+                            />
+                            <span>{navbarContents.brand.name}</span>
                         </Link>
                     </NavbarLeft>
                     <NavbarRight>
-                        <Button variant="default" asChild>
-                            <Link href="/register">Get Started</Link>
-                        </Button>
+                        <NavbarCTAs />
                     </NavbarRight>
                 </NavbarComponent>
             </div>

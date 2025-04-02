@@ -1,9 +1,10 @@
-import { createConfig, http, cookieStorage, createStorage } from "wagmi";
+import { getDefaultConfig } from "@rainbow-me/rainbowkit";
+// import { http, cookieStorage, createStorage } from "wagmi";
 import { Chain } from "wagmi/chains";
 
 
 // Define educhain configuration
-const educhain: Chain = {
+export const educhain: Chain = {
     id: 656476,
     name: "Educhain Testnet",
     nativeCurrency: {
@@ -22,14 +23,16 @@ const educhain: Chain = {
 };
 
 export function getConfig() {
-    return createConfig({
+    return getDefaultConfig({
+        appName: 'Avasara',
+        projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '',
         chains: [educhain],
         ssr: true,
-        storage: createStorage({
-            storage: cookieStorage,
-        }),
-        transports: {
-            [educhain.id]: http(),
-        },
+        // storage: createStorage({
+        //     storage: cookieStorage,
+        // }),
+        // transports: {
+        //     [educhain.id]: http(),
+        // },
     });
 }

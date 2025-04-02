@@ -1,19 +1,11 @@
-"use client"
-
-import { SendIcon, Star, UserRoundIcon } from "lucide-react";
+import { Star } from "lucide-react";
 import React from "react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import AnimatedUserProfiles from "../common/animated-user-profiles";
-import { useAccount } from "wagmi";
 import { heroContents } from "@/static/hero-contents";
+import HeroSectionCTAs from "@/components/common/hero-section-ctas";
 
 
 export default function Hero() {
-    const { isConnected } = useAccount();
-
-    console.log(isConnected);
-
     return (
         <>
             <section>
@@ -24,23 +16,7 @@ export default function Hero() {
                             {heroContents.description}
                         </p>
                     </div>
-                    <div>
-                        {
-                            isConnected ? (
-                                <>
-                                    <Button size="lg" className="mt-10 cursor-pointer">
-                                        <SendIcon /><Link href="https://t.me/avasara_bot" target="_blank">Try it out</Link>
-                                    </Button>
-                                </>
-                            ) : (
-                                <>
-                                    <Button size="lg" className="mt-10 cursor-pointer">
-                                        <UserRoundIcon /><Link href="/register">Get Started</Link>
-                                    </Button>
-                                </>
-                            )
-                        }
-                    </div>
+                        <HeroSectionCTAs />
                     <div className="mx-auto mt-10 flex w-fit flex-col items-center gap-4 sm:flex-row">
                         <div className="mx-4">
                             <AnimatedUserProfiles />

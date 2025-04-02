@@ -81,7 +81,7 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@4.0.9)
       viem:
-        specifier: 2.x
+        specifier: ~2.24.3
         version: 2.24.3(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.2)
       wagmi:
         specifier: ^2.14.16
