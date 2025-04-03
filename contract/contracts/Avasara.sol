@@ -28,7 +28,7 @@ contract Avasara {
 
     // Struct for on-chain data
     struct UserProfile {
-        bytes32 ipfsHash;           // Hash of IPFS data
+        string ipfsHash;           // IPFS CID as string
         uint8 location;             // Index of location
         uint8 primarySkill;         // Index of primary skill
         uint8 secondarySkill;       // Index of secondary skill
@@ -51,8 +51,8 @@ contract Avasara {
     mapping(uint8 => address[]) public usersByLocation;
     
     // Events
-    event UserRegistered(address indexed user, bytes32 ipfsHash);
-    event ProfileUpdated(address indexed user, bytes32 ipfsHash);
+    event UserRegistered(address indexed user, string ipfsHash);
+    event ProfileUpdated(address indexed user, string ipfsHash);
     event FeesWithdrawn(address indexed owner, uint256 amount);
 
     // Modifiers
@@ -73,7 +73,7 @@ contract Avasara {
 
     // Register a new user
     function registerUser(
-        bytes32 _ipfsHash,
+        string memory _ipfsHash,
         uint8 _location,
         uint8 _primarySkill,
         uint8 _secondarySkill,
@@ -123,7 +123,7 @@ contract Avasara {
 
     // Update user profile
     function updateProfile(
-        bytes32 _ipfsHash,
+        string memory _ipfsHash,
         uint8 _location,
         uint8 _primarySkill,
         uint8 _secondarySkill,
