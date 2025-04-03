@@ -11,7 +11,7 @@ export default function HeroSectionCTAs() {
     const [address, setAddress] = useState<string | null>(null);
     const [isRegistered, setIsRegistered] = useState<boolean>(false);
     const { isConnected, address: connectedAddress } = useAccount();
-    const { data: userProfiles } = useContractReadData('userProfiles', [address]);
+    const { data: userProfiles } = useContractReadData('getUserProfile', [address]);
 
     useEffect(() => {
         if (isConnected && connectedAddress) {
@@ -22,6 +22,7 @@ export default function HeroSectionCTAs() {
     useEffect(() => {
         if (userProfiles) {
             setIsRegistered(true);
+            console.log(userProfiles);
         }
     }, [userProfiles]);
 
