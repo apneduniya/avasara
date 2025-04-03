@@ -4,7 +4,7 @@ import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../static/contract';
 import { toast } from 'sonner';
 
 
-type ContractFunctionName = 'registerUser' | 'updateProfile' | 'withdrawFees';
+export type ContractFunctionName = 'registerUser' | 'updateProfile' | 'withdrawFees';
 
 interface ContractInteractionResult {
     isConnected: boolean;

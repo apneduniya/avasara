@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0x2c26feff3e2c753f43de22beade3823154457246";
+export const CONTRACT_ADDRESS = "0x5B7Abe742d0698674cfE8127e704b7aDdf203e3e";
 
 
 export const CONTRACT_ABI = [
@@ -37,13 +37,99 @@ export const CONTRACT_ABI = [
 			},
 			{
 				"indexed": false,
-				"internalType": "bytes32",
+				"internalType": "string",
 				"name": "ipfsHash",
-				"type": "bytes32"
+				"type": "string"
 			}
 		],
 		"name": "ProfileUpdated",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_ipfsHash",
+				"type": "string"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_location",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_primarySkill",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_secondarySkill",
+				"type": "uint8"
+			},
+			{
+				"internalType": "enum Avasara.ProfessionalStatus",
+				"name": "_status",
+				"type": "uint8"
+			},
+			{
+				"internalType": "enum Avasara.Language",
+				"name": "_language",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_yearsOfExperience",
+				"type": "uint8"
+			}
+		],
+		"name": "registerUser",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_ipfsHash",
+				"type": "string"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_location",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_primarySkill",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_secondarySkill",
+				"type": "uint8"
+			},
+			{
+				"internalType": "enum Avasara.ProfessionalStatus",
+				"name": "_status",
+				"type": "uint8"
+			},
+			{
+				"internalType": "enum Avasara.Language",
+				"name": "_language",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_yearsOfExperience",
+				"type": "uint8"
+			}
+		],
+		"name": "updateProfile",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -56,9 +142,9 @@ export const CONTRACT_ABI = [
 			},
 			{
 				"indexed": false,
-				"internalType": "bytes32",
+				"internalType": "string",
 				"name": "ipfsHash",
-				"type": "bytes32"
+				"type": "string"
 			}
 		],
 		"name": "UserRegistered",
@@ -66,15 +152,9 @@ export const CONTRACT_ABI = [
 	},
 	{
 		"inputs": [],
-		"name": "REGISTRATION_FEE",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
+		"name": "withdrawFees",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -165,9 +245,9 @@ export const CONTRACT_ABI = [
 			{
 				"components": [
 					{
-						"internalType": "bytes32",
+						"internalType": "string",
 						"name": "ipfsHash",
-						"type": "bytes32"
+						"type": "string"
 					},
 					{
 						"internalType": "uint8",
@@ -325,49 +405,6 @@ export const CONTRACT_ABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "bytes32",
-				"name": "_ipfsHash",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_location",
-				"type": "uint8"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_primarySkill",
-				"type": "uint8"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_secondarySkill",
-				"type": "uint8"
-			},
-			{
-				"internalType": "enum Avasara.ProfessionalStatus",
-				"name": "_status",
-				"type": "uint8"
-			},
-			{
-				"internalType": "enum Avasara.Language",
-				"name": "_language",
-				"type": "uint8"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_yearsOfExperience",
-				"type": "uint8"
-			}
-		],
-		"name": "registerUser",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
@@ -385,46 +422,16 @@ export const CONTRACT_ABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
+		"inputs": [],
+		"name": "REGISTRATION_FEE",
+		"outputs": [
 			{
-				"internalType": "bytes32",
-				"name": "_ipfsHash",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_location",
-				"type": "uint8"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_primarySkill",
-				"type": "uint8"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_secondarySkill",
-				"type": "uint8"
-			},
-			{
-				"internalType": "enum Avasara.ProfessionalStatus",
-				"name": "_status",
-				"type": "uint8"
-			},
-			{
-				"internalType": "enum Avasara.Language",
-				"name": "_language",
-				"type": "uint8"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_yearsOfExperience",
-				"type": "uint8"
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
-		"name": "updateProfile",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -438,9 +445,9 @@ export const CONTRACT_ABI = [
 		"name": "userProfiles",
 		"outputs": [
 			{
-				"internalType": "bytes32",
+				"internalType": "string",
 				"name": "ipfsHash",
-				"type": "bytes32"
+				"type": "string"
 			},
 			{
 				"internalType": "uint8",
@@ -527,13 +534,6 @@ export const CONTRACT_ABI = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "withdrawFees",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]

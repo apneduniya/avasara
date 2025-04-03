@@ -1,4 +1,5 @@
 import { UserRegisterSchema, skills, professionalStatus, languages, location } from "@/schema/register";
+import { uploadToIPFS } from "@/services/ipfs/upload";
 
 
 // Generate location map from location array
@@ -56,9 +57,29 @@ export const getLanguageValue = (language: string): number => {
 /**
  * Prepares user data for contract registration
  */
-export const prepareUserData = (formData: UserRegisterSchema) => {
+export const prepareUserRegistrationData = async (formData: UserRegisterSchema) => {
+    // Fields that are processed separately and should be excluded from IPFS
+    const processedFields = [
+        'location',
+        'primarySkills',
+        'secondarySkills',
+        'professionalStatus',
+        'language',
+        'yearsOfExperience'
+    ];
+
+    // Create a copy of form data excluding processed fields
+    const ipfsData = Object.fromEntries(
+        Object.entries(formData).filter(([key]) => !processedFields.includes(key))
+    );
+
+    console.log(ipfsData);
+
+    // Upload the relevant form data to IPFS
+    const ipfsHash = await uploadToIPFS(ipfsData);
+
     return {
-        ipfsHash: "0x0000000000000000000000000000000000000000000000000000000000000000", // TODO: Replace with actual IPFS hash
+        ipfsHash,
         location: getLocationValue(formData.location),
         primarySkill: getSkillValue(formData.primarySkills),
         secondarySkill: getSkillValue(formData.secondarySkills),

@@ -1,9 +1,8 @@
 "use client";
 
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { userRegisterSchema, professionalStatus, skills, languages, location } from "@/schema/register";
+import { userRegisterSchema, professionalStatus, skills, languages, location, type UserRegisterSchema } from "@/schema/register";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -14,16 +13,14 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { createFormFieldMetadata, renderFormField } from "@/utils/create-form-field";
-import { toast } from "sonner";
 import { useContractInteraction } from "@/hooks/use-contract-interaction";
-import { prepareUserData } from "@/utils/user-data";
-import { parseEther } from "viem";
+import { registerUser } from "@/services/users/register";
 
 
 export default function UserRegisterForm() {
     const { isReady, executeContractWrite, isLoading } = useContractInteraction();
 
-    const form = useForm<z.infer<typeof userRegisterSchema>>({
+    const form = useForm<UserRegisterSchema>({
         resolver: zodResolver(userRegisterSchema),
         defaultValues: {
             fullName: "Adarsh Gupta",
@@ -41,26 +38,11 @@ export default function UserRegisterForm() {
         },
     });
 
-    async function onSubmit(values: z.infer<typeof userRegisterSchema>) {
-        if (!isReady) return;
-
+    async function onSubmit(values: UserRegisterSchema) {
         try {
-            const userData = prepareUserData(values);
-            const args = [
-                userData.ipfsHash,
-                userData.location,
-                userData.primarySkill,
-                userData.secondarySkill,
-                userData.status,
-                userData.language,
-                userData.yearsOfExperience
-            ];
-            const value = parseEther("0.05");
-
-            executeContractWrite('registerUser', args, value);
-        } catch (error) {
-            console.error('Registration error:', error);
-            toast.error('Failed to register user');
+            await registerUser(values, { isReady, executeContractWrite });
+        } catch {
+            // Error is already handled in the service function
         }
     }
 
@@ -141,7 +123,7 @@ export default function UserRegisterForm() {
                         <FormField
                             key={fieldMetadata.name}
                             control={form.control}
-                            name={fieldMetadata.name as keyof z.infer<typeof userRegisterSchema>}
+                            name={fieldMetadata.name as keyof UserRegisterSchema}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>{fieldMetadata.label}</FormLabel>
