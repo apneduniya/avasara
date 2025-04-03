@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAccount, useWriteContract } from 'wagmi';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../static/contract';
 import { toast } from 'sonner';
-
+import { EXPLORER_URL } from '@/static/constants';
 
 export type ContractFunctionName = 'registerUser' | 'updateProfile' | 'withdrawFees';
 
@@ -59,7 +59,12 @@ export const useContractInteraction = (): ContractInteractionResult => {
 
     useEffect(() => {
         if (writeData) {
-            toast.success('Transaction successful!');
+            toast.success('Transaction successful!', {
+                action: {
+                    label: 'View on Explorer',
+                    onClick: () => window.open(`${EXPLORER_URL}/tx/${writeData}`, '_blank')
+                }
+            });
         }
         if (writeError) {
             toast.error('Transaction failed!');

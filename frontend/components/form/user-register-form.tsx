@@ -15,6 +15,7 @@ import {
 import { createFormFieldMetadata, renderFormField } from "@/utils/create-form-field";
 import { useContractInteraction } from "@/hooks/use-contract-interaction";
 import { registerUser } from "@/services/users/register";
+import { USER_REGISTRATION_FEE } from "@/static/constants";
 
 
 export default function UserRegisterForm() {
@@ -141,7 +142,7 @@ export default function UserRegisterForm() {
                         className="w-full cursor-pointer"
                         disabled={isLoading || !isReady}
                     >
-                        {isLoading ? "Processing..." : "Pay 0.05 EDU"}
+                        {isLoading ? "Processing..." : `Pay ${USER_REGISTRATION_FEE} EDU`}
                     </Button>
                 </form>
             </Form>

@@ -4,7 +4,7 @@ import { parseEther } from "viem";
 import { toast } from "sonner";
 import { logger } from "@/core/logger";
 import { type ContractFunctionName } from "@/hooks/use-contract-interaction";
-
+import { USER_REGISTRATION_FEE } from "@/static/constants";
 
 interface ContractInteraction {
     isReady: boolean;
@@ -54,7 +54,7 @@ export async function registerUser(userData: UserRegisterSchema, contract: Contr
             preparedData.language,
             preparedData.yearsOfExperience
         ];
-        const value = parseEther("0.05");
+        const value = parseEther(USER_REGISTRATION_FEE.toString());
 
         contract.executeContractWrite('registerUser', args, value);
     } catch (error) {
