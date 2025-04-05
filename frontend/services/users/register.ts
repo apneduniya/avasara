@@ -3,7 +3,7 @@ import { prepareUserRegistrationData } from "@/utils/prepare-user-registration-d
 import { parseEther } from "viem";
 import { toast } from "sonner";
 import { logger } from "@/core/logger";
-import { type ContractFunctionName } from "@/hooks/use-contract-interaction";
+import { ContractFunctionName } from "@/types/contract";
 import { USER_REGISTRATION_FEE } from "@/static/constants";
 
 interface ContractInteraction {
