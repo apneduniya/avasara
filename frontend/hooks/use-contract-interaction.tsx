@@ -3,8 +3,8 @@ import { useAccount, useWriteContract } from 'wagmi';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../static/contract';
 import { toast } from 'sonner';
 import { EXPLORER_URL } from '@/static/constants';
+import { ContractFunctionName } from '@/types/contract';
 
-export type ContractFunctionName = 'registerUser' | 'updateProfile' | 'withdrawFees';
 
 interface ContractInteractionResult {
     isConnected: boolean;

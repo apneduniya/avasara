@@ -1,23 +1,6 @@
 import { useReadContract } from 'wagmi';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../static/contract';
-
-
-export type ContractReadFunctionName = 
-    | 'getUserProfile'
-    | 'getRegisteredUsers'
-    | 'getTotalUsers'
-    | 'getTotalUsersByLocation'
-    | 'getTotalUsersBySkill'
-    | 'getUsersByLocation'
-    | 'getUsersByLocationPaginated'
-    | 'getUsersBySkill'
-    | 'getUsersBySkillPaginated'
-    | 'owner'
-    | 'registeredUsers'
-    | 'REGISTRATION_FEE'
-    | 'userProfiles'
-    | 'usersByLocation'
-    | 'usersBySkill';
+import { ContractReadFunctionName } from '@/types/contract';
 
     
 interface ContractReadResult<T> {

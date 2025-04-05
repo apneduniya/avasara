@@ -1,6 +1,7 @@
 import { createPublicClient, http } from 'viem';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from '@/static/contract';
 import { educhain } from '@/config/wagmi';
+import { ContractReadFunctionName } from '@/types/contract';
 
 
 export class ReadContractService {
@@ -13,7 +14,7 @@ export class ReadContractService {
         });
     }
 
-    private async readContract<T>(functionName: string, args: unknown[] = []): Promise<T> {
+    private async readContract<T>(functionName: ContractReadFunctionName, args: unknown[] = []): Promise<T> {
         try {
             const result = await this.publicClient.readContract({
                 address: CONTRACT_ADDRESS,
