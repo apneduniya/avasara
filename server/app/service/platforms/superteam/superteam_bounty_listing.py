@@ -8,6 +8,11 @@ from app.service.platforms.superteam.routes import SuperteamAPIRoutes
 
 
 class SuperteamBountyListingResourceHub(BaseAPIService, ResourceHub):
+    """
+    Resource hub for superteam bounty listings
+    """
+    interval_time = 60 * 60 * 24  # 24 hours
+
     def __init__(self):
         super().__init__("superteam bounty listing", SuperteamAPIRoutes.BASE)
         self.raw_resource_data = []

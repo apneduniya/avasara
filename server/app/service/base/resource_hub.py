@@ -44,4 +44,12 @@ class ResourceHub(ABC):
         The fetched data from the platform is stored in this property
         """
         pass
+
+    @property
+    @abstractmethod
+    def interval_time(self) -> int:
+        """
+        The interval time (in seconds) for the resource hub
+        """
+        pass
         
