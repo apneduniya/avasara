@@ -11,3 +11,4 @@ composio_core
 crewai
 langchain_openai
 composio_crewai
+pydantic_settings
