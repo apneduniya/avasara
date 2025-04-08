@@ -72,10 +72,10 @@ class BaseAPIService:
                 return ApiError("SERVER_ERROR", "Internal server error")
         return ApiError("UNKNOWN_ERROR", "An unexpected error occurred")
 
-    def get(self, url: ApiRoute) -> dict:
+    def get(self, url: ApiRoute, params: dict | None = None) -> dict:
         self.check_rate_limit()
         try:
-            response = self.session.get(f"{self.base_url}{url.value}")
+            response = self.session.get(f"{self.base_url}{url.value}", params=params)
             response.raise_for_status()
             return response.json()
         except RequestException as error:

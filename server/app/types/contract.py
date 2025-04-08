@@ -10,11 +10,24 @@ class ContractInfoData(BaseModel):
 
 
 class UserProfile(BaseModel):
+    """Complete user profile data"""
     address: str
-    name: t.Optional[str] = None
-    skills: t.List[str] = Field(default_factory=list)
-    location: t.Optional[str] = None
-    registration_date: t.Optional[str] = None
+    # Contract data
+    location: str
+    primarySkill: str
+    secondarySkill: str
+    status: str
+    language: str
+    yearsOfExperience: int
+    exists: bool
+    professionalStatus: str
+    # IPFS data
+    fullName: str
+    email: str
+    telegramUsername: str
+    linkedinUrl: t.Optional[str] = None
+    twitterUrl: t.Optional[str] = None
+    portfolioLink: t.Optional[str] = None
 
 
 # Response Types

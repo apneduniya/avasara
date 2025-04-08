@@ -52,7 +52,7 @@ class SmartContractAPI(BaseAPIService):
                 - message (Optional[str]): Success message if successful
                 - error (Optional[str]): Error message if request failed
         """
-        return self.get(f"{SmartContractAPIRoutes.USERS_BY_SKILL}?skill={skill}")
+        return self.get(SmartContractAPIRoutes.USERS_BY_SKILL, {"skill": skill})
 
     def get_users_by_location(self, location: str) -> UsersByLocationResponse:
         """
@@ -73,7 +73,7 @@ class SmartContractAPI(BaseAPIService):
                 - message (Optional[str]): Success message if successful
                 - error (Optional[str]): Error message if request failed
         """
-        return self.get(f"{SmartContractAPIRoutes.USERS_BY_LOCATION}?location={location}")
+        return self.get(SmartContractAPIRoutes.USERS_BY_LOCATION, {"location": location})
 
     def get_registered_users(self) -> RegisteredUsersResponse:
         """
@@ -112,4 +112,4 @@ class SmartContractAPI(BaseAPIService):
                 - message (Optional[str]): Success message if successful
                 - error (Optional[str]): Error message if request failed
         """
-        return self.get(f"{SmartContractAPIRoutes.USER_PROFILE}?address={address}")
+        return self.get(SmartContractAPIRoutes.USER_PROFILE, {"address": address})
