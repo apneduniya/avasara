@@ -31,9 +31,9 @@ class UserProfile(BaseModel):
 
 
 # Response Types
-ContractInfoResponse = FrontendAPIResponse[ContractInfoData]
-UsersBySkillResponse = FrontendAPIResponse[t.List[UserProfile]]
-UsersByLocationResponse = FrontendAPIResponse[t.List[UserProfile]]
-RegisteredUsersResponse = FrontendAPIResponse[t.List[UserProfile]]
-UserProfileResponse = FrontendAPIResponse[UserProfile]
+ContractInfoResponse = ContractInfoData
+UsersBySkillResponse = t.List[UserProfile]
+UsersByLocationResponse = t.List[UserProfile]
+RegisteredUsersResponse = t.List[UserProfile]
+UserProfileResponse = UserProfile
 

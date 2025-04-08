@@ -9,7 +9,10 @@ from starlette.exceptions import HTTPException
 # from app.controllers.agent_controller import agent_router
 from app.config import exception_config as exh
 from app.config.settings import config
-from app.service.platforms.scheduler import ResourceHubScheduler
+from app.core.logging import logger
+from app.service.scheduler.manager import SchedulerManager
+from app.service.scheduler.resource_hub_scheduler import ResourceHubScheduler
+from app.service.platforms.superteam.superteam_bounty_listing import SuperteamBountyListingResourceHub
 
 
 ORIGINS = ["*"]
@@ -17,23 +20,36 @@ ORIGINS = ["*"]
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Start Up Event
-    resource_hub_scheduler = ResourceHubScheduler()
-    resource_hub_scheduler.create_schedules()
-
-    resource_hub_scheduler.start()
-
-    print("\nS E R V E R   S T A R T I N G . . . . . . . . . .\n")
+    # Initialize schedulers
+    logger.info("Initializing schedulers...")
+    
+    # Create scheduler manager
+    scheduler_manager = SchedulerManager()
+    
+    # Initialize and configure resource hub scheduler
+    resource_scheduler = ResourceHubScheduler()
+    resource_scheduler.register_resource_hub(SuperteamBountyListingResourceHub)
+    scheduler_manager.register_scheduler(resource_scheduler)
+    
+    # Create and start all schedules
+    logger.info("Creating schedules...")
+    scheduler_manager.create_all_schedules()
+    
+    logger.info("Starting schedulers...")
+    scheduler_manager.start_all()
+    
+    logger.info("S E R V E R   S T A R T I N G . . . . . . . . . .")
     yield
 
     # Shut Down Event
+    logger.info("Shutting down schedulers...")
+    scheduler_manager.shutdown_all()
     
-    resource_hub_scheduler.shutdown()
-    
-    print("\nS E R V E R   S H U T D O W N . . . . . . . . . .\n")
+    logger.info("S E R V E R   S H U T D O W N . . . . . . . . . .")
 
 
 def create_application() -> FastAPI:
+    logger.info("Creating FastAPI application...")
     app = FastAPI(
         title=config.PROJECT_NAME,
         description=config.PROJECT_DESCRIPTION,
@@ -49,7 +65,7 @@ def create_application() -> FastAPI:
         allow_headers=["*"],
     )
 
-
+    logger.info("Adding exception handlers...")
     #  I N C L U D E   E X C E P T I O N S  H A N D L E R S
 
     app.add_exception_handler(RequestValidationError, exh.req_validation_handler)
@@ -59,17 +75,14 @@ def create_application() -> FastAPI:
     app.add_exception_handler(HTTPError, exh.http_error_handler)
     app.add_exception_handler(HTTPException, exh.http_exception_handler)
 
-
-    #  I N C L U D E   R O U T E R S
-
-    # app.include_router(agent_router, prefix="/agent", tags=["agent"])
-
+    logger.info("Application setup complete")
     return app
 
 
 if __name__ == "__main__":
     import uvicorn
 
+    logger.info("Starting server with uvicorn...")
     uvicorn.run(
         "app.main:create_application",
         factory=True,

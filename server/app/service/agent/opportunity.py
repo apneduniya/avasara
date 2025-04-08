@@ -8,6 +8,7 @@ from app.static.prompts.opportunity import SYSTEM_PROMPT, PROMPT
 from app.models.opportunity import Opportunity
 from app.helpers.verify.verify_opportunity_data import verify_and_format_opportunity_fields
 from app.static.key_skills import AVAILABLE_KEY_SKILLS
+from app.core.logging import logger
 
 
 client = AsyncOpenAI()
@@ -25,6 +26,7 @@ async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportuni
         List[Opportunity]: Processed opportunities as Opportunity model instances
     """
     try:
+        logger.info(f"Processing {len(opportunities)} opportunities through OpenAI API")
         response = await client.chat.completions.create(
             model="gpt-4o",
             temperature=0.2,
@@ -47,6 +49,7 @@ async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportuni
         # Parse the JSON response
         try:
             json_response = json.loads(response.choices[0].message.content)
+            logger.debug(f"Received response from OpenAI API: {json_response}")
 
             # Ensure we have a list of opportunities
             # if the response is a dictionary, we need to convert it to a list
@@ -55,6 +58,7 @@ async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportuni
             elif isinstance(json_response, list):
                 opportunities_list = json_response
             else:
+                logger.error(f"Invalid response format from OpenAI API: {type(json_response)}")
                 raise ValueError("Response must be a list or dictionary")
 
             # Verify fields and format each opportunity
@@ -65,17 +69,20 @@ async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportuni
                     if opportunity:
                         processed_opportunities.append(opportunity)
                 except Exception as e:
-                    print(f"Error processing opportunity: {e}")
+                    logger.error(f"Error processing opportunity: {e}")
                     continue
 
+            logger.info(f"Successfully processed {len(processed_opportunities)} opportunities")
             return processed_opportunities
 
         except json.JSONDecodeError as e:
+            logger.error(f"Error decoding JSON response from OpenAI API: {e}")
             raise json.JSONDecodeError(f"Error decoding JSON response: {e}")
     except KeyError as e:
+        logger.error(f"Missing key in opportunities: {e}")
         raise KeyError(f"Missing key in opportunities: {e}")
     except Exception as e:
-        # Log or handle other exceptions
+        logger.error(f"Unexpected error processing opportunities: {e}")
         raise e
 
 
@@ -91,17 +98,21 @@ async def process_opportunity_by_chunk(opportunities: t.List[t.Dict], chunk_size
         List[Opportunity]: Processed opportunities as Opportunity model instances
     """
     results = []
+    total_chunks = (len(opportunities) + chunk_size - 1) // chunk_size
+    logger.info(f"Processing {len(opportunities)} opportunities in {total_chunks} chunks of size {chunk_size}")
 
     for i in range(0, len(opportunities), chunk_size):
         chunk = opportunities[i:i + chunk_size]
         try:
+            logger.debug(f"Processing chunk {i//chunk_size + 1}/{total_chunks}")
             chunk_result = await process_opportunity(chunk)
             results.extend(chunk_result if isinstance(
                 chunk_result, list) else [chunk_result])
         except Exception as e:
+            logger.error(f"Error processing chunk {i//chunk_size + 1}: {e}")
             # Handle the exception by adding error responses for the whole chunk
             error_responses = [{'response': {'error': str(e)}} for _ in chunk]
             results.extend(error_responses)
-            # pass
 
+    logger.info(f"Completed processing all chunks. Total processed opportunities: {len(results)}")
     return results
