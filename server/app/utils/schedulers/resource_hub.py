@@ -8,6 +8,8 @@ async def create_resource_hub_background_job(resource_hub_class: t.Type[Resource
     Logic for background job of resource hub schedulers
     """
     hub = resource_hub_class()
+
+    # Fetch and generate opportunities
     hub.fetch()
     opportunities = await hub.generate_opportunity()
 

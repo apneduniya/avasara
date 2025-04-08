@@ -19,6 +19,7 @@ class ResourceHub(ABC):
         """
         pass
 
+    @t.final
     async def generate_opportunity(self) -> t.List[Opportunity] | t.List:
         """
         Convert the fetched data into a list of opportunities of type Opportunity

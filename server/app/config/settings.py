@@ -13,6 +13,9 @@ class Config(BaseSettings):
     ENVIRONMENT: str = "development"
     LOGS_DIR: str = "logs"
 
+    # Frontend Configuration
+    FRONTEND_URL: str
+
     # APScheduler Configuration
     APSCHEDULER_RUN_ON_STARTUP: bool = False # Run immediately once on startup (Default: False)
 

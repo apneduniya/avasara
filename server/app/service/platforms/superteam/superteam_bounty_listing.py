@@ -25,7 +25,7 @@ class SuperteamBountyListingResourceHub(BaseAPIService, ResourceHub):
     @property
     def resource_data(self) -> t.List:
         # Deep copy to prevent accidental modifications
-        # Otherwise, getting KeyError for unwanted fields before removing them
+        # Otherwise, getting KeyError for 'unwanted fields' (those I am deleting afterwards as they have no use like 'slug') before removing them
         data = [item.copy() for item in self.raw_resource_data]
         
         # Add some information to the data
@@ -36,7 +36,7 @@ class SuperteamBountyListingResourceHub(BaseAPIService, ResourceHub):
             # Add platform name as "superteam"
             item["platform_name"] = "superteam"
 
-            # Remove unwanted fields
+            # Remove 'unwanted fields'
             item.pop("slug")
 
         return data
