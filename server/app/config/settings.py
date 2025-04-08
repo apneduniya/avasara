@@ -22,6 +22,9 @@ class Config(BaseSettings):
     # APScheduler Configuration
     APSCHEDULER_RUN_ON_STARTUP: bool = False # Run immediately once on startup (Default: False)
 
+    # Other Configurations
+    OPENAI_API_KEY: str
+
     class Config:
         env_file = ".env"
         case_sensitive = True
