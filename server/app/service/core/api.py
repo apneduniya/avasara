@@ -200,7 +200,7 @@ class APIService(BaseAPIService[ApiRoute]):
         self._check_rate_limit()
         try:
             full_url = f"{self.base_url}{url.value}"
-            logger.debug(f"Making {method} request to {url.value}")
+            logger.debug(f"Making {method} request to {full_url}")
             response = self.session.request(
                 method=method,
                 url=full_url,

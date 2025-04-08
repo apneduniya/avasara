@@ -1,7 +1,12 @@
 import typing as t
+
 from app.core.logging import logger
+
+from app.helpers.notification.telegram_message import format_opportunity
+
 from app.service.core.resource_hub import ResourceHub
 from app.service.opportunity.matcher import OpportunityMatcher
+from app.service.notification.telegram import TelegramNotificationService
 
 
 async def create_resource_hub_background_job(resource_hub_class: t.Type[ResourceHub]):
@@ -42,7 +47,10 @@ async def create_resource_hub_background_job(resource_hub_class: t.Type[Resource
                     print(" - " * 20)
                 print("-"*100)
                 
-                # TODO: Notify capable users
+                # Notify capable users
+                for user in capable_users:
+                    telegram_notification_service = TelegramNotificationService(username=user.telegramUsername)
+                    telegram_notification_service.send_notification(format_opportunity(opportunity))
                 
                 logger.debug(f"Processed opportunity: {opportunity.title}")
                 logger.debug(f"Found {len(capable_users)} capable users")

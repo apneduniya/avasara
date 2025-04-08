@@ -13,6 +13,9 @@ class Config(BaseSettings):
     ENVIRONMENT: str = "development"
     LOGS_DIR: str = "logs"
 
+    # NOTIFICATION: Telegram Configuration
+    TELEGRAM_BOT_TOKEN: str
+
     # Frontend Configuration
     FRONTEND_URL: str
 
