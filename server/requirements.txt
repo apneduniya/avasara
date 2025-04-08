@@ -12,3 +12,4 @@ crewai
 langchain_openai
 composio_crewai
 pydantic_settings
+logging
