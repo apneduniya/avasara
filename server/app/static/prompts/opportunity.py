@@ -6,7 +6,7 @@ EXPECTED OUTPUT SCHEMA:
         "description": "str",  # short description
         "platform_name": "str",
         "deadline": "str",
-        "key_skills": "list", # list of skills required for the opportunity like content writing, video editing, python, rust, etc.
+        "key_skills": "list", # MUST be one or more of these exact values: {available_key_skills}. If none match, use "other"
         "location": "str",  # optional, default is "remote"
         "compensation": "str",  # optional, default is "variable"
         "know_more_link": "str",
@@ -20,7 +20,7 @@ EXAMPLES:
     "description": "We are looking for a software engineer to join our team.",
     "platform_name": "superteam",
     "deadline": "2022-01-01",
-    "key_skills": ["Python", "Django"],
+    "key_skills": ["full_stack_development"],
     "location": "remote",
     "compensation": "variable",
     "know_more_link": "https://example.com",
@@ -32,7 +32,7 @@ EXAMPLES:
     "description": "We are looking for a video editor to join our team.",
     "platform_name": "twitter",
     "deadline": "2022-01-01",
-    "key_skills": ["Adobe Premiere Pro"],
+    "key_skills": ["video_editing"],
     "location": "bangalore",
     "compensation": "$2000/month",
     "know_more_link": "https://example.com",
@@ -44,7 +44,7 @@ EXAMPLES:
     "description": "You will build an AI Agent which will help us to automate our customer support, content creation and community work.",
     "platform_name": "superteam",
     "deadline": "2022-01-01",
-    "key_skills": ["Python", "Machine Learning", "Gen AI"],
+    "key_skills": ["artificial_intelligence", "full_stack_development"],
     "location": "remote",
     "compensation": "$1000",
     "know_more_link": "https://example.com",

@@ -4,9 +4,10 @@ import json
 
 from openai import AsyncOpenAI
 
-from app.helpers.prompts.opportunity import SYSTEM_PROMPT, PROMPT
+from app.static.prompts.opportunity import SYSTEM_PROMPT, PROMPT
 from app.models.opportunity import Opportunity
 from app.helpers.verify.verify_opportunity_data import verify_and_format_opportunity_fields
+from app.static.key_skills import AVAILABLE_KEY_SKILLS
 
 
 client = AsyncOpenAI()
@@ -31,7 +32,7 @@ async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportuni
             messages=[
                 {
                     "role": "system",
-                    "content": SYSTEM_PROMPT
+                    "content": SYSTEM_PROMPT.format(available_key_skills=AVAILABLE_KEY_SKILLS)
                 },
                 {
                     "role": "user",
