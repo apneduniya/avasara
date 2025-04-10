@@ -78,7 +78,7 @@ def create_application() -> FastAPI:
 
     logger.info("Including routers...")
     # Include routers
-    app.include_router(contract_router, prefix="/api/contract", tags=["contract"])
+    app.include_router(contract_router, prefix="/contract", tags=["contract"])
 
     logger.info("Application setup complete")
     return app

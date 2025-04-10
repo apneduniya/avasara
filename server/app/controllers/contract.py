@@ -7,7 +7,7 @@ from app.types.base import BackendAPIResponse
 from app.core.logging import logger
 
 
-router = APIRouter(prefix="/api/contract", tags=["contract"])
+router = APIRouter()
 
 @router.get("/check-user-registration", response_model=BackendAPIResponse[UserRegistrationStatus])
 async def check_user_registration(

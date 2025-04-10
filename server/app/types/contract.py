@@ -32,7 +32,7 @@ class UserProfile(BaseModel):
 
 class UserRegistrationStatus(BaseModel):
     """User registration status response"""
-    isRegistered: bool
+    is_registered: bool
     username: str
     address: t.Optional[str] = None
     message: t.Optional[str] = None

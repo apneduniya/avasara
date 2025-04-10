@@ -205,7 +205,7 @@ class SmartContractAPI:
             if user:
                 logger.info(f"User {username} is registered")
                 return UserRegistrationStatus(
-                    isRegistered=True,
+                    is_registered=True,
                     username=username,
                     address=user.address,
                     message="User is registered"
@@ -213,7 +213,7 @@ class SmartContractAPI:
             else:
                 logger.info(f"User {username} is not registered")
                 return UserRegistrationStatus(
-                    isRegistered=False,
+                    is_registered=False,
                     username=username,
                     message="User is not registered"
                 )
