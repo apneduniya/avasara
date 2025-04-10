@@ -5,7 +5,7 @@ from sqlalchemy import (
     Column,
     String,
     Float,
-    Integer,
+    BigInteger,
     DateTime,
     Text,
 )
@@ -15,12 +15,12 @@ from app.models.base import BaseOrm, BaseSchema
 class ChatOrm(BaseOrm):
     __tablename__ = "chats"
 
-    chat_id = Column(Integer, primary_key=True, unique=True, nullable=False)
-    user_id = Column(Integer, nullable=False)
+    chat_id = Column(BigInteger, nullable=False)
+    user_id = Column(BigInteger, nullable=False)
     username = Column(String, nullable=True)
-    message_id = Column(Integer, nullable=False)
+    message_id = Column(BigInteger, nullable=False)
     message_content = Column(Text, nullable=False)
-    timestamp = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc), nullable=False)
+    timestamp = Column(DateTime(timezone=True), default=lambda: datetime.datetime.now(datetime.timezone.utc), nullable=False)
     chat_type = Column(String, nullable=False)
     media = Column(Text, nullable=True)
 

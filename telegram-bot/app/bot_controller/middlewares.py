@@ -14,6 +14,7 @@ class AutoAnswerMiddleware(BaseMiddleware):
     - This logs the incoming message and the outgoing message.
     - This send the response from the handlers to the user.
     """
+    _processed_messages = set()
 
     async def __call__(
         self,
@@ -22,9 +23,15 @@ class AutoAnswerMiddleware(BaseMiddleware):
         data: t.Dict[str, t.Any],
     ) -> t.Any:
         message: types.Message = event.message
+        
+        # Skip if we've already processed this message
+        message_key = f"{message.chat.id}_{message.message_id}"
+        if message_key in self._processed_messages:
+            return None
+        self._processed_messages.add(message_key)
+
         log_bot_incomming_message(message)
 
-        print(message.text)
         user_chat = ChatSchema(
             message_content=str(message.text),
             chat_id=int(message.chat.id),
@@ -33,20 +40,14 @@ class AutoAnswerMiddleware(BaseMiddleware):
             user_id=int(message.from_user.id),
             message_id=int(message.message_id),
         )
-        # await ChatService().save_message(user_chat.to_orm()) # convert pydantic to sqlalchemy and save to db
-        print(user_chat.model_dump_json())
+        await ChatService().save_message(user_chat.to_orm())
 
         result = await handler(event, data)
         log_bot_outgoing_message(message, result)
 
-        # result can be both string or list of strings
-        # if it is a list of strings, then we need to send each string as a separate message
-        if isinstance(result, list):
-            bot_response = "\n".join(result)
-        else:
-            bot_response = result
-
         if result is not None:
+            bot_response = "\n".join(result) if isinstance(result, list) else result
+            
             bot_chat: ChatSchema = ChatSchema(
                 message_content=str(bot_response),
                 chat_id=int(message.chat.id),
@@ -55,13 +56,15 @@ class AutoAnswerMiddleware(BaseMiddleware):
                 user_id=7259245296,
                 message_id=int(message.message_id) + 1,
             )
-            # await ChatService().save_message(bot_chat.to_orm())
-            print(bot_chat.model_dump_json())
+            await ChatService().save_message(bot_chat.to_orm())
+            
             if isinstance(result, list):
                 for item in result:
                     await message.answer(text=item, disable_web_page_preview=False)
-                return
-            await message.answer(text=result, disable_web_page_preview=False)
+            else:
+                await message.answer(text=result, disable_web_page_preview=False)
+            
+            return None
 
 
 # class SaveChatMiddleware(BaseMiddleware):

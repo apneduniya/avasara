@@ -18,7 +18,7 @@ sessionmaker = async_sessionmaker(bind=engine, expire_on_commit=False)
 
 
 @asynccontextmanager
-async def get_db_session() -> AsyncSession: # type: ignore
+async def get_db_session() -> AsyncSession:  # type: ignore
     session = sessionmaker()
     async with session.begin():
         yield session

@@ -1,9 +1,10 @@
 from aiogram import types
 
 from app.bot_controller.router import Router
-
+from app.services.server.contract import ContractService
 
 router = Router(name=__name__)
+contract_service = ContractService()
 
 
 @router.register(
@@ -11,8 +12,17 @@ router = Router(name=__name__)
     description="Start the bot",
 )
 async def send_welcome(message: types.Message):
+    username = message.from_user.username
+    is_user_registered = contract_service.is_user_exists(username)
+
+    if is_user_registered:
+        return [
+            f"Hello {username}! I'm Avasara!\nI collect best opportunities from different sources just for you!",
+            "Thank you for choosing us!"
+        ]
+
     return [
-        "Hello! I'm Avasara!\nI collect best opportunities from different sources just for you!",
+        f"Hello {username}! I'm Avasara!\nI collect best opportunities from different sources just for you!",
         "You can use /register command to create an account."
     ]
 
