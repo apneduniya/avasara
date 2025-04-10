@@ -46,18 +46,17 @@ class AutoAnswerMiddleware(BaseMiddleware):
         else:
             bot_response = result
 
-        bot_chat: ChatSchema = ChatSchema(
-            message_content=str(bot_response),
-            chat_id=int(message.chat.id),
-            chat_type=str(message.chat.type),
-            username="awasara_bot",
-            user_id=7259245296,
-            message_id=int(message.message_id) + 1,
-        )
-        # await ChatService().save_message(bot_chat.to_orm())
-        print(bot_chat.model_dump_json())
-
         if result is not None:
+            bot_chat: ChatSchema = ChatSchema(
+                message_content=str(bot_response),
+                chat_id=int(message.chat.id),
+                chat_type=str(message.chat.type),
+                username="avasara_bot",
+                user_id=7259245296,
+                message_id=int(message.message_id) + 1,
+            )
+            # await ChatService().save_message(bot_chat.to_orm())
+            print(bot_chat.model_dump_json())
             if isinstance(result, list):
                 for item in result:
                     await message.answer(text=item, disable_web_page_preview=False)

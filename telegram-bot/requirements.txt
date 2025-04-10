@@ -9,3 +9,4 @@ urllib3
 pydantic_settings
 sqlalchemy
 asyncpg
+prisma

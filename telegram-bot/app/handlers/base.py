@@ -12,7 +12,7 @@ router = Router(name=__name__)
 )
 async def send_welcome(message: types.Message):
     return [
-        "Hello! I'm Awasara!\nI collect best opportunities from different sources just for you!",
+        "Hello! I'm Avasara!\nI collect best opportunities from different sources just for you!",
         "You can use /register command to create an account."
     ]
 

@@ -1,30 +1,36 @@
+import typing as t
+
 from pydantic_settings import BaseSettings
 from pydantic import field_validator
 
 
 class Config(BaseSettings):
     # Application Configuration
-    LOG_LEVEL: str = "INFO"
-    ENVIRONMENT: str = "development"
+    LOG_LEVEL: t.Optional[str] = "INFO"
+    ENVIRONMENT: t.Optional[str] = "development"
     BOT_TOKEN: str
-    LOGS_DIR: str = "logs"
+    LOGS_DIR: t.Optional[str] = "logs"
 
     # Server Configuration
-    API_URL: str = "http://localhost:8000/"
+    API_URL: t.Optional[str] = "http://localhost:8000/"
 
     # Database Configuration
-    POSTGRES_USER: str = "postgres"
-    POSTGRES_PASSWORD: str = "postgres"
-    POSTGRES_DB: str = "awasara_bot"
-    POSTGRES_HOST: str = "localhost"
-    POSTGRES_PORT: str = "5432"
+    POSTGRES_USER: t.Optional[str] = "postgres"
+    POSTGRES_PASSWORD: t.Optional[str] = "postgres"
+    POSTGRES_DB: t.Optional[str] = "avasara"
+    POSTGRES_HOST: t.Optional[str] = "localhost"
+    POSTGRES_PORT: t.Optional[str] = "5432"
+    DATABASE_URL: t.Optional[str] = None
+    ASYNC_DATABASE_URL: t.Optional[str] = None
 
-    @property
-    def DATABASE_URL(self) -> str:
+    def get_database_url(self) -> str:
+        if self.DATABASE_URL:
+            return self.DATABASE_URL
         return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
-    
-    @property
-    def ASYNC_DATABASE_URL(self) -> str:
+
+    def get_async_database_url(self) -> str:
+        if self.ASYNC_DATABASE_URL:
+            return self.ASYNC_DATABASE_URL
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
     class Config:
@@ -42,4 +48,4 @@ class Config(BaseSettings):
         return v
 
 
-config = Config() 
+config = Config()
