@@ -12,7 +12,9 @@ from app.types.contract import (
     UsersBySkillResponse,
     UsersByLocationResponse,
     RegisteredUsersResponse,
-    UserProfileResponse
+    UserProfileResponse,
+    UserRegistrationStatus,
+    UserRegistrationStatusResponse
 )
 
 
@@ -170,4 +172,52 @@ class SmartContractAPI:
             return profile
         except Exception as e:
             logger.error(f"Error fetching profile for user {address}: {e}")
+            raise
+
+    def check_user_registration(self, username: str) -> UserRegistrationStatus:
+        """
+        Checks if a user is registered in the system based on their username.
+
+        Args:
+            username (str): The username to check
+
+        Returns:
+            UserRegistrationStatus: The registration status of the user
+
+        Raises:
+            ValueError: If username is empty or invalid
+        """
+        if not username or not isinstance(username, str):
+            raise ValueError("Username must be a non-empty string")
+
+        try:
+            logger.info(f"Checking registration status for username: {username}")
+            
+            # Get all registered users
+            registered_users = self.get_registered_users()
+            
+            # Check if user exists
+            user = next(
+                (user for user in registered_users if user.telegramUsername == username),
+                None
+            )
+            
+            if user:
+                logger.info(f"User {username} is registered")
+                return UserRegistrationStatus(
+                    isRegistered=True,
+                    username=username,
+                    address=user.address,
+                    message="User is registered"
+                )
+            else:
+                logger.info(f"User {username} is not registered")
+                return UserRegistrationStatus(
+                    isRegistered=False,
+                    username=username,
+                    message="User is not registered"
+                )
+                
+        except Exception as e:
+            logger.error(f"Error checking registration status for username {username}: {e}")
             raise

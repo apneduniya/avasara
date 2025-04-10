@@ -15,3 +15,13 @@ class FrontendAPIResponse(BaseModel, t.Generic[T]):
     message: t.Optional[str] = None
     data: t.Optional[T] = None
     error: t.Optional[str] = None
+
+
+class BackendAPIResponse(BaseModel, t.Generic[T]):
+    """
+    Generic API response model for backend
+    """
+    success: bool
+    message: t.Optional[str] = None
+    data: t.Optional[T] = None
+    error: t.Optional[str] = None

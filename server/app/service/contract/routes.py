@@ -18,6 +18,7 @@ class SmartContractAPIRoutes(Enum):
     USERS_BY_LOCATION = "/api/contract/users-by-location"
     REGISTERED_USERS = "/api/contract/registered-users"
     USER_PROFILE = "/api/contract/user-profile"
+    CHECK_USER_REGISTRATION = "/api/contract/check-user-registration"
 
 
 

@@ -13,6 +13,7 @@ from app.core.logging import logger
 from app.service.scheduler.manager import SchedulerManager
 from app.service.scheduler.resource_hub_scheduler import ResourceHubScheduler
 from app.service.platforms.superteam.superteam_bounty_listing import SuperteamBountyListingResourceHub
+from app.controllers.contract import router as contract_router
 
 
 ORIGINS = ["*"]
@@ -74,6 +75,10 @@ def create_application() -> FastAPI:
 
     app.add_exception_handler(HTTPError, exh.http_error_handler)
     app.add_exception_handler(HTTPException, exh.http_exception_handler)
+
+    logger.info("Including routers...")
+    # Include routers
+    app.include_router(contract_router, prefix="/api/contract", tags=["contract"])
 
     logger.info("Application setup complete")
     return app

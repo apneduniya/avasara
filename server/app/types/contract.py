@@ -30,10 +30,19 @@ class UserProfile(BaseModel):
     portfolioLink: t.Optional[str] = None
 
 
+class UserRegistrationStatus(BaseModel):
+    """User registration status response"""
+    isRegistered: bool
+    username: str
+    address: t.Optional[str] = None
+    message: t.Optional[str] = None
+
+
 # Response Types
 ContractInfoResponse = ContractInfoData
 UsersBySkillResponse = t.List[UserProfile]
 UsersByLocationResponse = t.List[UserProfile]
 RegisteredUsersResponse = t.List[UserProfile]
 UserProfileResponse = UserProfile
+UserRegistrationStatusResponse = UserRegistrationStatus
 
