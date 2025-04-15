@@ -16,3 +16,4 @@ logging
 sqlalchemy
 asyncpg
 greenlet
+typing_inspect

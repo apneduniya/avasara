@@ -1,6 +1,7 @@
 import typing as t
 import datetime
 
+from pydantic import BaseModel
 from sqlalchemy import (
     Column,
     String,
@@ -9,6 +10,7 @@ from sqlalchemy import (
     DateTime,
     Text,
 )
+
 from app.models.core.base import BaseOrm, BaseSchema
 
 
@@ -35,3 +37,15 @@ class ChatSchema(BaseSchema):
     message_content: str
     chat_type: str
     media: t.Optional[str] = None
+
+
+
+class RequestSaveMessage(BaseModel):
+    chat_id: int
+    user_id: int
+    username: t.Optional[str] = None
+    message_id: int
+    message_content: str
+    chat_type: str
+    media: t.Optional[str] = None
+    

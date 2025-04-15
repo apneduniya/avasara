@@ -6,14 +6,15 @@ from httpx import HTTPError
 from pydantic import ValidationError
 from starlette.exceptions import HTTPException
 
-# from app.controllers.agent_controller import agent_router
 from app.config import exception_config as exh
 from app.config.settings import config
 from app.core.logging import logger
 from app.service.scheduler.manager import SchedulerManager
 from app.service.scheduler.resource_hub_scheduler import ResourceHubScheduler
 from app.service.platforms.superteam.superteam_bounty_listing import SuperteamBountyListingResourceHub
-from app.controllers.contract import router as contract_router
+
+from app.controllers.contract import contract_router
+from app.controllers.chat import chat_router
 
 
 ORIGINS = ["*"]
@@ -58,6 +59,9 @@ def create_application() -> FastAPI:
         lifespan=lifespan
     )
 
+    if config.ENVIRONMENT == "production":
+        app.openapi_url = None
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=ORIGINS,
@@ -79,6 +83,7 @@ def create_application() -> FastAPI:
     logger.info("Including routers...")
     # Include routers
     app.include_router(contract_router, prefix="/contract", tags=["contract"])
+    app.include_router(chat_router, prefix="/chat", tags=["chat"])
 
     logger.info("Application setup complete")
     return app
@@ -91,6 +96,7 @@ if __name__ == "__main__":
     uvicorn.run(
         "app.main:create_application",
         factory=True,
+        log_level=config.LOG_LEVEL.lower(),
         access_log=True,
         reload=True,  # has to be false for tracing to work
     )

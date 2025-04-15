@@ -251,28 +251,30 @@ if __name__ == "__main__":
         """
         chat_service = ChatService()
 
-        # save a new message
-        new_chat = ChatSchema(
-            chat_id=123,
-            user_id=456,
-            username="thatsmeadarsh",
-            message_id=123,
-            message_content="Hello!",
-            chat_type="text",
-            media="None"
-        )
+        # Save a new message
+        # new_chat = ChatSchema(
+        #     chat_id=123,
+        #     user_id=456,
+        #     username="thatsmeadarsh",
+        #     message_id=123,
+        #     message_content="Hello!",
+        #     chat_type="text",
+        #     media="None"
+        # )
 
-        saved_chat = await chat_service.save_message(new_chat.to_orm())
-        message_id = saved_chat.id
-        print(f"Saved message ID: {message_id}")
+        # saved_chat = await chat_service.save_message(new_chat.to_orm())
+        # message_id = saved_chat.id
+        # print(f"Saved message ID: {message_id}")
 
         # Get paginated chats for a specific username
         pageable = PageRequestSchema(
             page=1, size=10, sort='created_at', direction='DESC')
         chats = await chat_service.get_paged_chats_by_username('thatsmeadarsh', pageable)
-        print(chats)
+
+        print("-" * 50)
         for chat in chats.data:
             chat: ChatSchema = chat
+            print(f"ID: {chat.id}")
             print(f"Chat ID: {chat.chat_id}")
             print(f"User ID: {chat.user_id}")
             print(f"Username: {chat.username}")
