@@ -9,6 +9,7 @@ from app.core.logging import logger
 
 router = APIRouter()
 
+
 @router.get("/check-user-registration", response_model=BackendAPIResponse[UserRegistrationStatus])
 async def check_user_registration(
     username: str = Query(..., description="Username to check registration status for")

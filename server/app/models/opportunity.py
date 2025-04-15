@@ -1,7 +1,7 @@
 import typing as t
 from uuid import uuid4
 
-from app.models.base.base import BaseSchema
+from app.models.core.base import BaseSchema
 
 
 

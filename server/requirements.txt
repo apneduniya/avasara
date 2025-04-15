@@ -13,3 +13,6 @@ langchain_openai
 composio_crewai
 pydantic_settings
 logging
+sqlalchemy
+asyncpg
+greenlet
