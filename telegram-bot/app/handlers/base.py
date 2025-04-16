@@ -2,12 +2,14 @@ from aiogram import types
 
 from app.bot_controller.router import Router
 from app.services.server.contract import ContractService
+from app.core.config import config
 
-router = Router(name=__name__)
+
+base_router = Router(name=__name__)
 contract_service = ContractService()
 
 
-@router.register(
+@base_router.register(
     command="start",
     description="Start the bot",
 )
@@ -27,25 +29,20 @@ async def send_welcome(message: types.Message):
     ]
 
 
-@router.register(
+@base_router.register(
     command="help",
     description="View all available commands",
 )
 async def help(message: types.Message):
-    return "\n".join(router.command_list)
+    all_commands = Router.get_all_commands()
+    if not all_commands:
+        return "No commands available."
+    return "Available commands:\n" + "\n".join(all_commands)
 
 
-@router.register(
-    command="register",
-    description="Register an account",
-)
-async def register(message: types.Message):
-    return "Send your resume to start the registration process."
-
-
-@router.register()
+@base_router.register()
 async def common(message: types.Message):
-    ...
+    print("\ncommon\n")
 
 
 

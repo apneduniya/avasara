@@ -17,6 +17,7 @@ class BotController:
 
     ROUTERS = [
         handlers.base_router,
+        handlers.users_router,
     ]
 
     def __init__(self, bot_token: str):
@@ -39,7 +40,7 @@ class BotController:
 
     def _register_middlewares(self):
         for middleware in self.MIDDLEWARES:
-            self._dispatcher.update.middleware.register(middleware())
+            self._dispatcher.update.outer_middleware.register(middleware())
 
     def _register_routers(self):
         self._dispatcher.include_routers(*self.ROUTERS)

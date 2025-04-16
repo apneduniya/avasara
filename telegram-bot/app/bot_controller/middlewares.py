@@ -5,7 +5,7 @@ from aiogram import BaseMiddleware
 from aiogram import types
 
 from app.helpers.logs import log_bot_incomming_message, log_bot_outgoing_message
-from app.services.chat_service import ChatService
+from app.services.server.chat import ChatService
 from app.models.chat import ChatSchema
 
 
@@ -14,7 +14,6 @@ class AutoAnswerMiddleware(BaseMiddleware):
     - This logs the incoming message and the outgoing message.
     - This send the response from the handlers to the user.
     """
-    _processed_messages = set()
 
     async def __call__(
         self,
@@ -23,12 +22,7 @@ class AutoAnswerMiddleware(BaseMiddleware):
         data: t.Dict[str, t.Any],
     ) -> t.Any:
         message: types.Message = event.message
-        
-        # Skip if we've already processed this message
-        message_key = f"{message.chat.id}_{message.message_id}"
-        if message_key in self._processed_messages:
-            return None
-        self._processed_messages.add(message_key)
+        chat_service = ChatService()
 
         log_bot_incomming_message(message)
 
@@ -40,9 +34,10 @@ class AutoAnswerMiddleware(BaseMiddleware):
             user_id=int(message.from_user.id),
             message_id=int(message.message_id),
         )
-        await ChatService().save_message(user_chat.to_orm())
+        await chat_service.save_message(user_chat)
 
         result = await handler(event, data)
+
         log_bot_outgoing_message(message, result)
 
         if result is not None:
@@ -56,7 +51,7 @@ class AutoAnswerMiddleware(BaseMiddleware):
                 user_id=7259245296,
                 message_id=int(message.message_id) + 1,
             )
-            await ChatService().save_message(bot_chat.to_orm())
+            await chat_service.save_message(bot_chat)
             
             if isinstance(result, list):
                 for item in result:
