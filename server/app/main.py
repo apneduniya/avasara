@@ -15,6 +15,7 @@ from app.service.platforms.superteam.superteam_bounty_listing import SuperteamBo
 
 from app.controllers.contract import contract_router
 from app.controllers.chat import chat_router
+from app.controllers.agent import agent_router
 
 
 ORIGINS = ["*"]
@@ -84,7 +85,7 @@ def create_application() -> FastAPI:
     # Include routers
     app.include_router(contract_router, prefix="/contract", tags=["contract"])
     app.include_router(chat_router, prefix="/chat", tags=["chat"])
-
+    app.include_router(agent_router, prefix="/agent", tags=["agent"])
     logger.info("Application setup complete")
     return app
 

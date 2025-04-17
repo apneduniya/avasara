@@ -266,14 +266,10 @@ if __name__ == "__main__":
         # message_id = saved_chat.id
         # print(f"Saved message ID: {message_id}")
 
-        # Get paginated chats for a specific username
-        pageable = PageRequestSchema(
-            page=1, size=10, sort='created_at', direction='DESC')
-        chats = await chat_service.get_paged_chats_by_username('thatsmeadarsh', pageable)
+        def divider():
+            print("-" * 50)
 
-        print("-" * 50)
-        for chat in chats.data:
-            chat: ChatSchema = chat
+        def print_chat_data(chat: ChatSchema):
             print(f"ID: {chat.id}")
             print(f"Chat ID: {chat.chat_id}")
             print(f"User ID: {chat.user_id}")
@@ -283,6 +279,31 @@ if __name__ == "__main__":
             print(f"Created At: {chat.created_at}")
             print(f"Chat Type: {chat.chat_type}")
             print(f"Media: {chat.media}")
-            print("-" * 50)
+            divider()
+        
+        pageable = PageRequestSchema(page=1, size=10, sort='created_at', direction='DESC')
+
+        # # Get paginated chats for a specific username
+        # chats = await chat_service.get_paged_chats_by_username('thatsmeadarsh', pageable)
+        
+
+        # divider()
+        # for chat in chats.data:
+        #     print_chat_data(chat)
+
+        # # Get paginated chats for avasara_bot
+        # chats = await chat_service.get_paged_chats_by_username('avasara_bot', pageable)
+
+        # divider()
+        # for chat in chats.data:
+        #     print_chat_data(chat)
+
+        # Get paginated chats for a specific chat ID
+        chat_id = 5611375328
+        chats = await chat_service.get_paged_chats_by_chat_id(chat_id, pageable)
+
+        divider()
+        for chat in chats.data:
+            print_chat_data(chat)
 
     asyncio.run(main())

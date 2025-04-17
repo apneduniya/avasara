@@ -2,21 +2,18 @@ import typing as t
 import asyncio
 import json
 
-from openai import AsyncOpenAI
-
 from app.static.prompts.opportunity import SYSTEM_PROMPT, PROMPT
 from app.models.opportunity import Opportunity
 from app.helpers.verify.verify_opportunity_data import verify_and_format_opportunity_fields
 from app.static.key_skills import AVAILABLE_KEY_SKILLS
 from app.core.logging import logger
-
-
-client = AsyncOpenAI()
+from app.utils.llm import LLM
+from app.static.llm import OpenAIModel
 
 
 async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportunity]:
     """
-    Process opportunities asynchronously and processes them through the OpenAI API.
+    Process opportunities asynchronously and processes them through the LLM.
 
     Args:
         opportunities (List[Dict]): List of opportunity dictionaries containing details like title,
@@ -26,11 +23,13 @@ async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportuni
         List[Opportunity]: Processed opportunities as Opportunity model instances
     """
     try:
-        logger.info(f"Processing {len(opportunities)} opportunities through OpenAI API")
-        response = await client.chat.completions.create(
-            model="gpt-4o",
-            temperature=0.2,
-            frequency_penalty=0.1,
+        logger.info(f"Processing {len(opportunities)} opportunities through LLM")
+        
+        # Initialize LLM client
+        llm = LLM(OpenAIModel.GPT_4O)
+        
+        # Make the API call
+        response = await llm.chat_completion(
             messages=[
                 {
                     "role": "system",
@@ -41,6 +40,8 @@ async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportuni
                     "content": PROMPT.format(opportunities=json.dumps(opportunities, indent=2))
                 }
             ],
+            temperature=0.2,
+            frequency_penalty=0.1,
             response_format={
                 "type": "json_object",
             }
@@ -48,8 +49,8 @@ async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportuni
 
         # Parse the JSON response
         try:
-            json_response = json.loads(response.choices[0].message.content)
-            logger.debug(f"Received response from OpenAI API: {json_response}")
+            json_response = json.loads(response.content)
+            logger.debug(f"Received response from LLM: {json_response}")
 
             # Ensure we have a list of opportunities
             # if the response is a dictionary, we need to convert it to a list
@@ -58,7 +59,7 @@ async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportuni
             elif isinstance(json_response, list):
                 opportunities_list = json_response
             else:
-                logger.error(f"Invalid response format from OpenAI API: {type(json_response)}")
+                logger.error(f"Invalid response format from LLM: {type(json_response)}")
                 raise ValueError("Response must be a list or dictionary")
 
             # Verify fields and format each opportunity
@@ -76,7 +77,7 @@ async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportuni
             return processed_opportunities
 
         except json.JSONDecodeError as e:
-            logger.error(f"Error decoding JSON response from OpenAI API: {e}")
+            logger.error(f"Error decoding JSON response from LLM: {e}")
             raise json.JSONDecodeError(f"Error decoding JSON response: {e}")
     except KeyError as e:
         logger.error(f"Missing key in opportunities: {e}")

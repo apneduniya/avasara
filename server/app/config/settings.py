@@ -15,6 +15,11 @@ class Config(BaseSettings):
     PROJECT_VERSION: str = "1.0.0"
     PROJECT_DESCRIPTION: str = "AI-powered real-time opportunity aggregator that gathers opportunities from various platforms and matches them to users based on their skills and profiles."
 
+    # Bot Configuration
+    BOT_USERNAME: str = "avasara_bot"
+    BOT_NAME: str = "Avasara"
+    BOT_ID: int = 7259245296
+
     # Application Configuration
     LOG_LEVEL: str = "INFO"
     ENVIRONMENT: str = "development"
