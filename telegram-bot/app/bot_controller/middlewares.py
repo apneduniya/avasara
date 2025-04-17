@@ -6,7 +6,9 @@ from aiogram import types
 
 from app.helpers.logs import log_bot_incomming_message, log_bot_outgoing_message
 from app.services.server.chat import ChatService
+from app.services.server.contract import ContractService
 from app.models.chat import ChatSchema
+from app.core.config import config
 
 
 class AutoAnswerMiddleware(BaseMiddleware):
@@ -60,6 +62,36 @@ class AutoAnswerMiddleware(BaseMiddleware):
                 await message.answer(text=result, disable_web_page_preview=False)
             
             return None
+
+
+class AuthorizedMiddleware(BaseMiddleware):
+    """
+    - This checks if the user is authorized to use the bot.
+    """
+    UNRESTRICTED_COMMANDS = [
+        "start",
+        "help",
+        "register",
+    ]
+
+    async def __call__(
+        self,
+        handler: t.Callable[[types.TelegramObject, t.Dict[str, t.Any]], t.Awaitable[t.Any]],
+        event: types.TelegramObject,
+        data: t.Dict[str, t.Any],
+    ) -> t.Any:
+        message: types.Message = event.message
+        contract_service = ContractService()
+        
+        # if the user sends an unrestricted command, we don't need to check if they are authorized
+        if message.text in self.UNRESTRICTED_COMMANDS:
+            return await handler(event, data)
+
+        # check the user is authorized, we can proceed to the next middleware
+        if contract_service.is_user_exists(message.from_user.username):
+            return await handler(event, data)
+        else:
+            return await message.answer(f"You are not authorized to use this bot. Please visit {config.FRONTEND_URL}/register to create an account.")
 
 
 # class SaveChatMiddleware(BaseMiddleware):

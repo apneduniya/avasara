@@ -40,9 +40,9 @@ async def help(message: types.Message):
     return "Available commands:\n" + "\n".join(all_commands)
 
 
-@base_router.register()
-async def common(message: types.Message):
-    print("\ncommon\n")
+# @base_router.register()
+# async def common(message: types.Message):
+#     print("\ncommon\n")
 
 
 

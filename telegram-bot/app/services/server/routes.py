@@ -14,3 +14,9 @@ class ChatAPIRoutes(Enum):
 
     SAVE_MESSAGE: str = "/chat/save-message"
 
+
+class AgentAPIRoutes(Enum):
+    BASE: str = config.API_URL
+
+    ASK_QUESTION: str = "/agent/ask-question"
+
