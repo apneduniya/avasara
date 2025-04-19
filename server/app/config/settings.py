@@ -15,6 +15,16 @@ class Config(BaseSettings):
     PROJECT_VERSION: str = "1.0.0"
     PROJECT_DESCRIPTION: str = "AI-powered real-time opportunity aggregator that gathers opportunities from various platforms and matches them to users based on their skills and profiles."
 
+    # RabbitMQ Configuration
+    RABBITMQ_HOST: str = "localhost"
+    RABBITMQ_PORT: int = 5672
+    RABBITMQ_USERNAME: str = "guest"
+    RABBITMQ_PASSWORD: str = "guest"
+    RABBITMQ_VIRTUAL_HOST: str = "/"
+    RABBITMQ_EXCHANGE_NAME: str = "default_exchange"
+    RABBITMQ_EXCHANGE_TYPE: str = "direct"
+    RABBITMQ_URL: str = ""  # For CloudAMQP or other managed services
+
     # Bot Configuration
     BOT_USERNAME: str = "avasara_bot"
     BOT_NAME: str = "Avasara"

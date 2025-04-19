@@ -17,3 +17,4 @@ sqlalchemy
 asyncpg
 greenlet
 typing_inspect
+aio_pika
