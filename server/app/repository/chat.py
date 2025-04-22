@@ -41,7 +41,7 @@ class ChatRepository(GenericRepository[ChatOrm]):
             telegram_username (str): The Telegram username to search for
 
         Returns:
-            ChatOrm: The chat record if found, None otherwise
+            ChatOrm: The most recent chat record if found, None otherwise
 
         Example:
             >>> chat_repo = ChatRepository()
@@ -55,9 +55,13 @@ class ChatRepository(GenericRepository[ChatOrm]):
         """
         async with get_db_session() as session:
             try:
-                query = select(ChatOrm).filter(ChatOrm.username == telegram_username)
+                query = (
+                    select(ChatOrm)
+                    .filter(ChatOrm.username == telegram_username)
+                    .order_by(ChatOrm.created_at.desc())
+                )
                 result = await session.execute(query)
-                return result.scalar_one_or_none()
+                return result.scalars().all()[0]
             except NoResultFound:
                 return None
 
@@ -124,3 +128,4 @@ class ChatRepository(GenericRepository[ChatOrm]):
             >>> print(f"Found {total} chats, showing page {pageable.page}")
         """
         return await super().get_paged_items(pageable, filters)
+

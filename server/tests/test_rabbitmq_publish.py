@@ -2,7 +2,7 @@ import asyncio
 import os
 from datetime import datetime
 
-from app.utils.rabbitmq import RabbitMQService
+from app.service.core.rabbitmq import RabbitMQService
 from app.models.rabbitmq import RabbitMQMessage
 
 

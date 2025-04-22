@@ -238,6 +238,41 @@ class ChatService:
             total_pages=total_pages
         )
 
+    async def get_chat_id_by_username(self, telegram_username: str) -> t.Optional[int]:
+        """
+        Get the chat ID associated with a Telegram username.
+
+        This method is used to:
+        - Retrieve the chat ID for a specific user
+        - Support user lookup functionality
+        - Enable chat history access
+        - Facilitate user-specific operations
+
+        Args:
+            telegram_username (str): The Telegram username to look up
+
+        Returns:
+            int: The chat ID associated with the username, or None if not found
+
+        Example:
+            >>> chat_id = await chat_service.get_chat_id_by_username('john_doe')
+            >>> if chat_id:
+            ...     print(f"Found chat ID: {chat_id}")
+            ... else:
+            ...     print("User not found")
+        """
+        try:
+            chat = await self.chat_repo.get_by_telegram_username(telegram_username)
+            if chat is None:
+                return None
+            return chat.chat_id
+        except Exception as e:
+            # Log the error and return None to handle the case where multiple rows are found
+            from app.core.logging import logger
+            logger.error(f"Error getting chat ID for username {telegram_username}: {str(e)}")
+            return None
+
+
 
 if __name__ == "__main__":
     async def main():

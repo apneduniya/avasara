@@ -56,6 +56,7 @@ class Config(BaseSettings):
 
     # Other Configurations
     OPENAI_API_KEY: str
+    GOOGLE_API_KEY: str
 
     def get_database_url(self) -> str:
         """

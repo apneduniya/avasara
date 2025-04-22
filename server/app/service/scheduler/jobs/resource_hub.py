@@ -1,12 +1,16 @@
 import typing as t
 
 from app.core.logging import logger
+from app.config.settings import config
 
 from app.helpers.notification.telegram_message import format_opportunity
 
 from app.service.core.resource_hub import ResourceHub
 from app.service.opportunity.matcher import OpportunityMatcher
-from app.service.notification.telegram import TelegramNotificationService
+from app.utils.telegram_publisher import TelegramPublisher
+
+
+opportunity_matcher = OpportunityMatcher()
 
 
 async def create_resource_hub_background_job(resource_hub_class: t.Type[ResourceHub]):
@@ -21,7 +25,6 @@ async def create_resource_hub_background_job(resource_hub_class: t.Type[Resource
     try:
         # Initialize services
         hub = resource_hub_class()
-        opportunity_matcher = OpportunityMatcher()
 
         # Fetch and generate opportunities
         hub.fetch()
@@ -38,19 +41,30 @@ async def create_resource_hub_background_job(resource_hub_class: t.Type[Resource
                 # Match opportunity with capable users
                 capable_users = opportunity_matcher.match_opportunity_with_users(opportunity)
 
-                print("-"*100)
-                print("Opportunity Title: ", opportunity.title)
-                print("Opportunity Key Skills: ", opportunity.key_skills)
-                print(" - " * 20)
-                for user in capable_users:
-                    print("Capable User: ", user.telegramUsername)
+                if config.ENVIRONMENT == "development":
+                    print("-"*100)
+                    print("Opportunity Title: ", opportunity.title)
+                    print("Opportunity Key Skills: ", opportunity.key_skills)
                     print(" - " * 20)
-                print("-"*100)
+                    for user in capable_users:
+                        print("Capable User: ", user.telegramUsername)
+                        print(" - " * 20)
+                    print("-"*100)
                 
-                # Notify capable users
+                # Publish opportunity data to Telegram Bot Server
                 for user in capable_users:
-                    telegram_notification_service = TelegramNotificationService(username=user.telegramUsername)
-                    telegram_notification_service.send_notification(format_opportunity(opportunity))
+                    publisher = TelegramPublisher()
+
+                    try:
+                        await publisher.send_notification(
+                            username=user.telegramUsername,
+                            message=format_opportunity(opportunity)
+                        )
+                    except Exception as e:
+                        logger.error(f"Error sending notification to {user.telegramUsername}: {e}")
+
+                    finally:
+                        await publisher.close()
                 
                 logger.debug(f"Processed opportunity: {opportunity.title}")
                 logger.debug(f"Found {len(capable_users)} capable users")

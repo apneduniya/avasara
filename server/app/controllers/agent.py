@@ -8,8 +8,8 @@ from app.models.core.pageable import PageRequestSchema
 from app.models.repository.chat import ChatSchema
 from app.service.chat.data import ChatService
 from app.config.settings import config
-from app.static.llm import OpenAIModel
-from app.utils.llm import LLM
+from app.static.llm import OpenAIModel, GeminiModel
+from app.service.core.llm import LLM
 from app.types.base import BackendAPIResponse
 from app.models.agent.chat import RequestAgentAskQuestion
 from app.helpers.chat.llm_message import generate_llm_message
@@ -52,11 +52,12 @@ class AgentController:
                 chat_id=request.chat_id,
                 user_id=config.BOT_ID,
                 username=config.BOT_USERNAME,
+                message_id=int(chat_history.data[-1].message_id)+1,
                 message_content=response.content,
                 chat_type=chat_history.data[-1].chat_type,
                 media=None
             )
-            await self.chat_service.save_message(chat)
+            await self.chat_service.save_message(chat.to_orm())
             return BackendAPIResponse(success=True, message="Question asked successfully", data=response.content)
         except Exception as e:
             logger.error(f"Error asking question: {e}")

@@ -1,7 +1,7 @@
 import asyncio
 import os
 
-from app.utils.rabbitmq import RabbitMQService
+from app.service.core.rabbitmq import RabbitMQService
 
 
 async def process_message(message):

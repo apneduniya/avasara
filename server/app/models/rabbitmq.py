@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Dict, Optional
 from aio_pika import ExchangeType
+from pydantic import BaseModel
 
 from app.config.settings import config
 
@@ -30,3 +31,11 @@ class RabbitMQMessage:
     routing_key: str
     headers: Optional[Dict[str, Any]] = None
     timestamp: datetime = datetime.utcnow() 
+
+
+
+class OpportunityNotification(BaseModel):
+    """Opportunity notification data"""
+    username: str
+    message: str
+    timestamp: datetime = datetime.utcnow().isoformat()

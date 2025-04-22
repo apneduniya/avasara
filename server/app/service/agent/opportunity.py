@@ -7,8 +7,8 @@ from app.models.opportunity import Opportunity
 from app.helpers.verify.verify_opportunity_data import verify_and_format_opportunity_fields
 from app.static.key_skills import AVAILABLE_KEY_SKILLS
 from app.core.logging import logger
-from app.utils.llm import LLM
-from app.static.llm import OpenAIModel
+from app.service.core.llm import LLM
+from app.static.llm import OpenAIModel, GeminiModel
 
 
 async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportunity]:

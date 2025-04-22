@@ -18,3 +18,4 @@ asyncpg
 greenlet
 typing_inspect
 aio_pika
+google-genai

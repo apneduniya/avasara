@@ -2,13 +2,15 @@ import typing as t
 
 from openai import AsyncOpenAI
 from openai.types.chat import ChatCompletion
+from google import genai
+from google.genai import types as genai_types
 
-from app.static.llm import OpenAIModel
+from app.static.llm import OpenAIModel, GeminiModel
 from app.core.logging import logger
 from app.models.llm import LLMResponse
 
 
-LLMModelType = t.TypeVar("LLMModelType", bound=t.Union[OpenAIModel])
+LLMModelType = t.TypeVar("LLMModelType", bound=t.Union[OpenAIModel, GeminiModel])
 
 
 class LLM(t.Generic[LLMModelType]):
@@ -38,7 +40,8 @@ class LLM(t.Generic[LLMModelType]):
     """
     def __init__(self, model: LLMModelType):
         self.model = model
-        self.client = AsyncOpenAI()
+        self.openai_client = AsyncOpenAI()
+        self.gemini_client = genai.Client()
 
         self.model._validate_env_var()
 
@@ -61,6 +64,8 @@ class LLM(t.Generic[LLMModelType]):
         match self.model:
             case OpenAIModel.GPT_4O | OpenAIModel.GPT_4O_MINI:
                 return await self._openai_chat_completion(messages, *args, **kwargs)
+            case GeminiModel.GEMINI_1_5_PRO | GeminiModel.GEMINI_1_5_FLASH | GeminiModel.GEMINI_2_0_FLASH:
+                return await self._gemini_chat_completion(messages, *args, **kwargs)
             case _:
                 logger.debug(f"Unsupported model: {self.model}")
                 raise ValueError(f"Unsupported model: {self.model}")
@@ -79,7 +84,7 @@ class LLM(t.Generic[LLMModelType]):
         """
         try:
             logger.info("Making OpenAI API request")
-            response: ChatCompletion = await self.client.chat.completions.create(
+            response: ChatCompletion = await self.openai_client.chat.completions.create(
                 model=self.model.value,
                 messages=messages,
                 *args,
@@ -91,4 +96,28 @@ class LLM(t.Generic[LLMModelType]):
         except Exception as e:
             logger.error(f"Error in OpenAI API call: {str(e)}")
             raise e
+        
+    async def _gemini_chat_completion(self, messages: t.List[t.Dict[str, t.Any]], *args, **kwargs) -> LLMResponse:
+        """
+        Make a chat completion request to Gemini API.
+        """
+        try:
+            # Convert messages to Gemini format
+            user_message = messages[-1]["content"]
+            gemini_messages = [genai_types.Content(parts=[genai_types.Part(text=message["content"])]) for message in messages[:-1]]
 
+            logger.info("Making Gemini API request")
+            chat = await self.gemini_client.aio.chats.create(
+                model=self.model.value,
+                history=gemini_messages,
+                *args,
+                **kwargs
+            )
+
+            response = await chat.send_message(user_message)
+
+            return LLMResponse(content=response.text)
+            
+        except Exception as e:
+            logger.error(f"Error in Gemini API call: {str(e)}")
+            raise e
