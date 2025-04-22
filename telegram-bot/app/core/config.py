@@ -11,6 +11,16 @@ class Config(BaseSettings):
     BOT_TOKEN: str
     LOGS_DIR: str = "logs"
 
+    # RabbitMQ Configuration
+    RABBITMQ_HOST: str = "localhost"
+    RABBITMQ_PORT: int = 5672
+    RABBITMQ_USERNAME: str = "guest"
+    RABBITMQ_PASSWORD: str = "guest"
+    RABBITMQ_VIRTUAL_HOST: str = "/"
+    RABBITMQ_EXCHANGE_NAME: str = "default_exchange"
+    RABBITMQ_EXCHANGE_TYPE: str = "direct"
+    RABBITMQ_URL: str = ""  # For CloudAMQP or other managed services
+
     # Server Configuration
     API_URL: str = "http://localhost:8000/"
 

@@ -24,6 +24,6 @@ class AgentService:
         """
         Ask a question to the agent.
         """
-        response: BackendAPIResponse = self.api.post(AgentAPIRoutes.ASK_QUESTION, params={"chat_id": chat_id, "question": question})
+        response: BackendAPIResponse = self.api.post(AgentAPIRoutes.ASK_QUESTION, data={"chat_id": chat_id, "question": question})
         return response["data"]
 

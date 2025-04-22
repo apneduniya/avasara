@@ -92,12 +92,21 @@ class AuthorizedMiddleware(BaseMiddleware):
             return await handler(event, data)
         else:
             return await message.answer(f"You are not authorized to use this bot. Please visit {config.FRONTEND_URL}/register to create an account.")
+        
 
-
-# class SaveChatMiddleware(BaseMiddleware):
-#     """
-#     - This saves the incoming message to the database.
-#     """
+class SaveNewUserMiddleware(BaseMiddleware):
+    """
+    - This saves the new user to the database.
+    """
+    async def __call__(
+        self,
+        handler: t.Callable[[types.TelegramObject, t.Dict[str, t.Any]], t.Awaitable[t.Any]],
+        event: types.TelegramObject,
+        data: t.Dict[str, t.Any],
+    ) -> t.Any:
+        ...
+        
+        
 #     async def __call__(
 #         self,
 #         handler: t.Callable[[types.TelegramObject, t.Dict[str, t.Any]], t.Awaitable[t.Any]],
