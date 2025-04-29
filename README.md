@@ -8,7 +8,7 @@
 ## 📙 Features
 - **AI-Powered Opportunity Discovery**: Fetches real-time jobs, internships, grants, and bounties from multiple platforms.
 - **Personalized Matching Engine**: Recommends opportunities based on user profiles, resumes, and social data.
-- **Verified & Secure Listings**: Uses blockchain to ensure authenticity and integrity of opportunities.
+- **Verified Listings**: Uses AI to ensure authenticity and integrity of opportunities so that people posting fake opportunities can be detected.
 - **Instant Telegram Alerts**: Sends personalized notifications directly to users via Telegram.
 - **Multi-Platform Integration**: Connects with LinkedIn, GitHub, Twitter, and more for profile analysis and updates.
 
