@@ -24,6 +24,10 @@ We chose EduChain because it's built specifically for the education space. It le
 4. Push your branch: `git push origin feature-name`.
 5. Create a pull request.
 
+## 🛠️ Workflow
+![image](https://github.com/user-attachments/assets/d9e3296a-a49b-46b6-a2e2-225569ea70ff)
+![image](https://github.com/user-attachments/assets/3cbb9581-0136-4f24-8fa8-93cae978da79)
+
 ## ✍ Acknowledgments
 This project couldn't be there if they didn't be there!
 - [Edu Chain](https://educhain.xyz/)
