@@ -4,6 +4,10 @@ from app.models.core.base import BaseOrm
 from app.config.settings import config
 from app.core.logging import logger
 
+# Import all models to ensure they are registered with the metadata
+from app.models.repository.chat import ChatOrm
+from app.models.repository.opportunity import OpportunityOrm
+
 
 async def init_db():
     """

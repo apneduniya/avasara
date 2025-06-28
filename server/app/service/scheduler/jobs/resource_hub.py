@@ -6,12 +6,13 @@ from app.config.settings import config
 from app.helpers.notification.telegram_message import format_opportunity
 
 from app.service.core.resource_hub import ResourceHub
+from app.service.opportunity.data import OpportunityService
 from app.service.opportunity.matcher import OpportunityMatcher
 from app.utils.telegram_publisher import TelegramPublisher
 
 
 opportunity_matcher = OpportunityMatcher()
-
+opportunity_service = OpportunityService()
 
 async def create_resource_hub_background_job(resource_hub_class: t.Type[ResourceHub]):
     """
@@ -26,18 +27,23 @@ async def create_resource_hub_background_job(resource_hub_class: t.Type[Resource
         # Initialize services
         hub = resource_hub_class()
 
-        # Fetch and generate opportunities
+        # Fetch and generate opportunities - remove existing opportunities from the list.
         hub.fetch()
+        await hub.remove_existing_opportunities()
+
         opportunities = await hub.generate_opportunity()
+        if opportunities is None:
+            logger.warning("No opportunities found")
+            return
+        
         logger.info(f"Generated {len(opportunities)} opportunities")
 
         # Process each opportunity
         for opportunity in opportunities:
             try:
-                # TODO: Add database check for existing opportunities
-                # if opportunity exists in database:
-                #     continue
-                
+                # Save opportunity to database
+                await opportunity_service.save(opportunity)
+
                 # Match opportunity with capable users
                 capable_users = opportunity_matcher.match_opportunity_with_users(opportunity)
 

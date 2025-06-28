@@ -1,5 +1,4 @@
 import typing as t
-import asyncio
 import json
 
 from app.static.prompts.opportunity import SYSTEM_PROMPT, PROMPT
@@ -7,11 +6,13 @@ from app.models.opportunity import Opportunity
 from app.helpers.verify.verify_opportunity_data import verify_and_format_opportunity_fields
 from app.static.key_skills import AVAILABLE_KEY_SKILLS
 from app.core.logging import logger
+from app.config.settings import config
 from app.service.core.llm import LLM
-from app.static.llm import OpenAIModel, GeminiModel
+from app.static.default import DEFAULT_LLM_MODEL
+from app.helpers.json import default_encoder
 
 
-async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportunity]:
+async def process_opportunity(opportunities: t.List[t.Dict]) -> t.Optional[t.List[Opportunity]]:
     """
     Process opportunities asynchronously and processes them through the LLM.
 
@@ -23,10 +24,10 @@ async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportuni
         List[Opportunity]: Processed opportunities as Opportunity model instances
     """
     try:
-        logger.info(f"Processing {len(opportunities)} opportunities through LLM")
+        logger.info(f"Processing {len(opportunities)} opportunities through {DEFAULT_LLM_MODEL} LLM")
         
         # Initialize LLM client
-        llm = LLM(OpenAIModel.GPT_4O)
+        llm = LLM(model=DEFAULT_LLM_MODEL)
         
         # Make the API call
         response = await llm.chat_completion(
@@ -37,7 +38,7 @@ async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportuni
                 },
                 {
                     "role": "user",
-                    "content": PROMPT.format(opportunities=json.dumps(opportunities, indent=2))
+                    "content": PROMPT.format(opportunities=json.dumps(opportunities, indent=2, default=default_encoder))
                 }
             ],
             temperature=0.2,
@@ -49,13 +50,19 @@ async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportuni
 
         # Parse the JSON response
         try:
+            opportunities_list = []
+
             json_response = json.loads(response.content)
             logger.debug(f"Received response from LLM: {json_response}")
 
             # Ensure we have a list of opportunities
             # if the response is a dictionary, we need to convert it to a list
             if isinstance(json_response, dict):
-                opportunities_list = [json_response]
+                if json_response.get("opportunities"):
+                    opportunities_list = json_response["opportunities"]
+                else:
+                    logger.error(f"Invalid response format from LLM: {type(json_response)}")
+                    raise ValueError("Response must be a dictionary with 'opportunities' key")
             elif isinstance(json_response, list):
                 opportunities_list = json_response
             else:
@@ -63,10 +70,10 @@ async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportuni
                 raise ValueError("Response must be a list or dictionary")
 
             # Verify fields and format each opportunity
-            processed_opportunities = []
+            processed_opportunities: t.List[Opportunity] = []
             for opp in opportunities_list:
                 try:
-                    opportunity = verify_and_format_opportunity_fields(opp)
+                    opportunity: t.Optional[Opportunity] = verify_and_format_opportunity_fields(opp)
                     if opportunity:
                         processed_opportunities.append(opportunity)
                 except Exception as e:
@@ -87,7 +94,7 @@ async def process_opportunity(opportunities: t.List[t.Dict]) -> t.List[Opportuni
         raise e
 
 
-async def process_opportunity_by_chunk(opportunities: t.List[t.Dict], chunk_size: int = 5) -> t.List[Opportunity]:
+async def process_opportunity_by_chunk(opportunities: t.List[t.Dict], chunk_size: int = 5) -> t.Optional[t.List[Opportunity]]:
     """
     Process opportunities in chunks
 
@@ -98,7 +105,7 @@ async def process_opportunity_by_chunk(opportunities: t.List[t.Dict], chunk_size
     Returns:
         List[Opportunity]: Processed opportunities as Opportunity model instances
     """
-    results = []
+    results: t.List[Opportunity] = []
     total_chunks = (len(opportunities) + chunk_size - 1) // chunk_size
     logger.info(f"Processing {len(opportunities)} opportunities in {total_chunks} chunks of size {chunk_size}")
 
@@ -111,9 +118,10 @@ async def process_opportunity_by_chunk(opportunities: t.List[t.Dict], chunk_size
                 chunk_result, list) else [chunk_result])
         except Exception as e:
             logger.error(f"Error processing chunk {i//chunk_size + 1}: {e}")
-            # Handle the exception by adding error responses for the whole chunk
-            error_responses = [{'response': {'error': str(e)}} for _ in chunk]
-            results.extend(error_responses)
+
+    if len(results) == 0:
+        logger.warning("No opportunities found after processing all chunks")
+        return None
 
     logger.info(f"Completed processing all chunks. Total processed opportunities: {len(results)}")
     return results
