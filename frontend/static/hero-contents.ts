@@ -1,10 +1,10 @@
 
 
 export const heroContents = {
-    heading: "Building the largest network of talent on the Edu Chain",
+    heading: "Let the opportunity find you",
     description: "Discover real-time job openings, grants, and learning opportunities tailored to your skills. Our AI Agent fetches and verifies the best opportunities from multiple sources, ensuring you never miss out.",
     reviews: {
-        count: 200,
+        count: 20,
         avatars: [
             {
                 src: "https://www.shadcnblocks.com/images/block/avatar-1.webp",
