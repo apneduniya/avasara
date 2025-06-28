@@ -21,6 +21,13 @@ class BaseResourceHub(ABC):
         """
         pass
 
+    @abstractmethod
+    async def remove_existing_opportunities(self) -> t.List[t.Dict]:
+        """
+        Check and remove existing opportunities (which has already been fetched and saved in the database before) from the list.
+        """
+        pass
+
     @property
     @abstractmethod
     def resource_data(self) -> t.List:
@@ -50,7 +57,7 @@ class ResourceHub(BaseResourceHub):
     """
     
     @t.final
-    async def generate_opportunity(self) -> t.List[Opportunity] | t.List:
+    async def generate_opportunity(self) -> t.Optional[t.List[Opportunity]]:
         """
         Convert fetched data into Opportunity objects
         
@@ -59,11 +66,15 @@ class ResourceHub(BaseResourceHub):
         """
         if not self.resource_data:
             logger.warning("No resource data available to generate opportunities")
-            return []
+            return None
         
         try:
             logger.info(f"Generating opportunities from {len(self.resource_data)} resources")
             opportunity_data = await process_opportunity_by_chunk(self.resource_data)
+            if opportunity_data is None:
+                logger.warning("No opportunities found after processing all chunks")
+                return None
+            
             logger.info(f"Successfully generated {len(opportunity_data)} opportunities")
             return opportunity_data
         except Exception as e:

@@ -8,8 +8,8 @@ from app.models.core.pageable import PageRequestSchema
 from app.models.repository.chat import ChatSchema
 from app.service.chat.data import ChatService
 from app.config.settings import config
-from app.static.llm import OpenAIModel, GeminiModel
 from app.service.core.llm import LLM
+from app.static.default import DEFAULT_LLM_MODEL
 from app.types.base import BackendAPIResponse
 from app.models.agent.chat import RequestAgentAskQuestion
 from app.helpers.chat.llm_message import generate_llm_message
@@ -23,7 +23,7 @@ agent_router = APIRouter()
 class AgentController:
     def __init__(self):
         self.chat_service = ChatService()
-        self.llm = LLM(OpenAIModel.GPT_4O)
+        self.llm = LLM(model=DEFAULT_LLM_MODEL)
         self.pageable = PageRequestSchema(page=1, size=10, sort='created_at', direction='DESC')
 
     @agent_router.post("/ask-question", response_model=BackendAPIResponse[str])

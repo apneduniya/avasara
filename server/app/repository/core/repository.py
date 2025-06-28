@@ -153,12 +153,8 @@ class GenericRepository(BaseRepository[T]):
             count_query = select(func.count()).select_from(self._model).filter_by(**params)
             total_count = (await session.execute(count_query)).scalar()
 
-            # Get paginated results with relationships
+            # Get paginated results
             if total_count > 0:
-                # Get all relationships that need to be loaded
-                relationships = [rel.key for rel in self._model.__mapper__.relationships]
-                
-                # Build the query with appropriate loading strategies
                 sort_column = getattr(self._model, pageable.sort)
                 query = (
                     select(self._model)
@@ -167,15 +163,6 @@ class GenericRepository(BaseRepository[T]):
                     .limit(pageable.size)
                     .offset(pageable.offset)
                 )
-                
-                # Add loading strategies for relationships
-                for rel in relationships:
-                    if rel in self._model.__mapper__.relationships:
-                        rel_obj = self._model.__mapper__.relationships[rel]
-                        if rel_obj.direction.name in ['ONETOMANY', 'MANYTOMANY']:
-                            query = query.options(selectinload(getattr(self._model, rel)))
-                        else:
-                            query = query.options(joinedload(getattr(self._model, rel)))
                 
                 result = await session.execute(query)
                 data = result.scalars().all()

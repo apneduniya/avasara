@@ -52,7 +52,6 @@ class Config(BaseSettings):
     POSTGRES_PORT: str = "5432"
     DATABASE_URL: str = ""
     ASYNC_DATABASE_URL: str = ""
-    
 
     # Other Configurations
     OPENAI_API_KEY: str

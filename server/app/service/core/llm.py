@@ -5,12 +5,12 @@ from openai.types.chat import ChatCompletion
 from google import genai
 from google.genai import types as genai_types
 
-from app.static.llm import OpenAIModel, GeminiModel
 from app.core.logging import logger
+from app.types.llm import LLMModelType
+
+from app.static.llm import OpenAIModel, GeminiModel
 from app.models.llm import LLMResponse
 
-
-LLMModelType = t.TypeVar("LLMModelType", bound=t.Union[OpenAIModel, GeminiModel])
 
 
 class LLM(t.Generic[LLMModelType]):
@@ -40,10 +40,25 @@ class LLM(t.Generic[LLMModelType]):
     """
     def __init__(self, model: LLMModelType):
         self.model = model
-        self.openai_client = AsyncOpenAI()
-        self.gemini_client = genai.Client()
 
+        self.openai_client = None
+        self.gemini_client = None
+        
+        self._validate_model()
         self.model._validate_env_var()
+
+    def _validate_model(self) -> None:
+        """
+        Validate the model type and initialize the clients.
+        """
+        match self.model:
+            case OpenAIModel.GPT_4O | OpenAIModel.GPT_4O_MINI:
+                self.openai_client = AsyncOpenAI()
+            case GeminiModel.GEMINI_1_5_PRO | GeminiModel.GEMINI_1_5_FLASH | GeminiModel.GEMINI_2_0_FLASH:
+                self.gemini_client = genai.Client()
+            case _:
+                logger.debug(f"Unsupported model: {self.model}")
+                raise ValueError(f"Unsupported model: {self.model}")
 
     async def chat_completion(self, messages: t.List[t.Dict[str, t.Any]], *args, **kwargs) -> LLMResponse:
         """

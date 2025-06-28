@@ -8,6 +8,6 @@ class SuperteamAPIRoutes(Enum):
 
     BASE = "https://earn.superteam.fun/api"
 
-    SUPERTEAM_BOUNTY_LISTINGS = "/homepage/listings"
+    SUPERTEAM_BOUNTY_LISTINGS = "/listings"
 
 

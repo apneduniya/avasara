@@ -1,13 +1,13 @@
 import typing as t
 import asyncio
-from datetime import datetime
+import datetime
 
-from app.helpers.json import pretty_json
 from app.core.logging import logger
 
 from app.service.core.api import APIService
 from app.service.core.resource_hub import ResourceHub
 from app.service.platforms.superteam.routes import SuperteamAPIRoutes
+from app.repository.opportunity import OpportunityRepository
 
 
 class SuperteamBountyListingResourceHub(ResourceHub):
@@ -25,6 +25,9 @@ class SuperteamBountyListingResourceHub(ResourceHub):
             base_url=SuperteamAPIRoutes.BASE
         )
         self.raw_resource_data = []
+        self.opportunity_repository = OpportunityRepository()
+        self.platform_name = "superteam"
+
         logger.info("Initialized SuperteamBountyListingResourceHub")
 
     @property
@@ -56,6 +59,21 @@ class SuperteamBountyListingResourceHub(ResourceHub):
             logger.error(f"Error fetching Superteam bounty listings: {e}")
             raise
 
+    async def remove_existing_opportunities(self) -> t.List[t.Dict]:
+        """
+        Check and remove existing opportunities (which has already been fetched and saved in the database before) from the list.
+        """
+        count = 0
+        
+        for item in self.raw_resource_data:
+            opportunity = await self.opportunity_repository.get_by_platform_name_and_platform_id(self.platform_name, item["id"])
+            if opportunity:
+                logger.debug(f"Removing existing opportunity: {item['title']}")
+                self.raw_resource_data.remove(item)
+                count += 1
+        logger.info(f"Removed {count} existing opportunities from the list")
+        return self.raw_resource_data
+
     @property
     def resource_data(self) -> t.List[t.Dict]:
         """
@@ -74,10 +92,10 @@ class SuperteamBountyListingResourceHub(ResourceHub):
             
             logger.debug("Processing bounty listings data")
             for item in data:
-                # Add metadata
+                # Add extra metadata
                 item["bounty_link"] = f"https://earn.superteam.fun/listing/{item['slug']}"
-                item["platform_name"] = "superteam"
-                item["fetched_at"] = datetime.utcnow().isoformat()
+                item["platform_name"] = self.platform_name
+                item["fetched_at"] = datetime.datetime.now(datetime.UTC) # Just for helping LLM to understand the data better
                 
                 # Remove unnecessary fields
                 item.pop("slug", None)
@@ -100,21 +118,34 @@ class SuperteamBountyListingResourceHub(ResourceHub):
 
 
 if __name__ == "__main__":
+    from dotenv import load_dotenv
+
+    from app.service.opportunity.data import OpportunityService
+    from app.helpers.json import pretty_json
+
+    load_dotenv()
+
     async def main():
         try:
-            # Initialize and fetch data
+            opportunity_service = OpportunityService()
             superteam_bounty_listing = SuperteamBountyListingResourceHub()
+
             superteam_bounty_listing.fetch()
+            await superteam_bounty_listing.remove_existing_opportunities()
             
             # Generate opportunities
             opportunities = await superteam_bounty_listing.generate_opportunity()
+            if opportunities is None:
+                print("\nNo opportunities found\n")
+                return
             
-            # Convert to dictionaries for JSON serialization
-            opportunity_dicts = [opp.model_dump() for opp in opportunities]
-            
-            # Log results
-            logger.info("Opportunity data:")
-            logger.info(pretty_json(opportunity_dicts))
+            for opportunity in opportunities:
+                await opportunity_service.save(opportunity)
+                print(f"\nSaved opportunity: {opportunity.title}")
+
+            opportunities_dict = [opp.model_dump() for opp in opportunities] 
+            print(f"\n\nFetched {len(opportunities)} opportunities:")
+            print(pretty_json(opportunities_dict), "\n\n")
             
         except Exception as e:
             logger.error(f"Error in main execution: {e}")

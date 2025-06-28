@@ -19,3 +19,5 @@ greenlet
 typing_inspect
 aio_pika
 google-genai
+tiktoken
+faiss-cpu
