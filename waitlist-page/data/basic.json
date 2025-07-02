@@ -1,0 +1,11 @@
+{
+    "name": "Avasara",
+    "title": "Let the opportunity find you",
+    "description": "Real-time opportunity aggregator that gathers opportunities from various platforms and matches them to users based on their skills and profiles.",
+    "altDescription": "Never miss an opportunity - we scan Twitter, LinkedIn, and top platforms to send the best hackathons, gigs, tech events, etc. straight to your DMs.",
+    "website": "https://avasara.thatsmeadarsh.com",
+    "authors": {
+        "name": "Adarsh",
+        "url": "https://thatsmeadarsh.com"
+    }
+}
