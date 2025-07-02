@@ -1,12 +1,17 @@
+"use client";
+
 import Image from "next/image";
 
 import LogoWithText from "@/components/common/logo/logo-with-text";
 import WaitlistForm from "@/components/common/form/waitlist-form";
 
 import basicInfo from "@/data/basic.json";
+import useMediaQuery from "@/hooks/use-media-query";
 
 
 export default function Hero() {
+    const isMobile = useMediaQuery("(max-width: 768px)");
+
     return (
         <>
             <section id="hero" className="relative w-full h-dvh z-0 flex justify-center items-center">
@@ -32,7 +37,11 @@ export default function Hero() {
                 </div>
 
                 {/* Background Images */}
-                <Image src="/assets/hero/background-social.png" alt="Social Background" width={1280} height={714} className="absolute top-0 left-0 w-full h-full object-cover select-none -z-40" />
+                {
+                    !isMobile && (
+                        <Image src="/assets/hero/background-social.png" alt="Social Background" width={1280} height={714} className="absolute top-0 left-0 w-full h-full object-cover select-none -z-40" />
+                    )
+                }
                 <Image src="/assets/hero/background-grid.png" alt="Grid Background" width={1280} height={714} className="absolute top-0 left-0 w-full h-full object-cover select-none -z-50" />
             </section>
         </>
