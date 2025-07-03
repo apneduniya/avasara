@@ -13,6 +13,16 @@
 :root {
   --background-color: #F2F2F2;
   --text-color: #1E1E1E;
+  --truck-animation-primary: #275efe;
+  --truck-animation-primary-light: #7699ff;
+  --truck-animation-dark: #1c212e;
+  --truck-animation-grey-dark: #3f4656;
+  --truck-animation-grey: #6c7486;
+  --truck-animation-grey-light: #cdd9ed;
+  --truck-animation-white: #fff;
+  --truck-animation-green: #16bf78;
+  --truck-animation-sand: #dcb773;
+  --truck-animation-sand-light: #edd9a9;
 }
 
 * {
