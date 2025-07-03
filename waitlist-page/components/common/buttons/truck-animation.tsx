@@ -1,28 +1,36 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import styles from "@/styles/truck-animation.module.css";
 import { cn } from "@/lib/utils";
 
 
-export default function TruckAnimation({
+export default function TruckAnimationButton({
     className = "",
     text = "I'm in!",
     successText = "Welcome to the family!",
     handleTimeOut = () => {},
+    type = "button",
+    startAnimation = true,
+    disabled = false,
 }: {
     className?: string;
     text?: string;
     successText?: string;
     handleTimeOut?: () => void;
+    type?: "button" | "submit" | "reset";
+    startAnimation?: boolean;
+    disabled?: boolean;
 }) {
     const btnRef = useRef<HTMLButtonElement>(null);
     const [isSuccessState, setIsSuccessState] = useState(false);
+    const [isDisabled, setIsDisabled] = useState(disabled);
 
     const handleClick = () => {
         const btn = btnRef.current;
         if (!btn) return;
-        if (!btn.classList.contains(styles.animate)) {
+        if (!btn.classList.contains(styles.animate) && startAnimation) {
             btn.classList.add(styles.animate);
             setTimeout(() => {
                 setIsSuccessState(true);
@@ -31,12 +39,23 @@ export default function TruckAnimation({
         }
     };
 
+    useEffect(() => {
+        setIsDisabled(disabled);
+    }, [disabled]);
+
+    useEffect(() => {
+        if (startAnimation) {
+            handleClick();
+        }
+    }, [startAnimation]);
+
     return (
         <button
             ref={btnRef}
             className={cn(styles.order, "rounded-xl", className)}
-            type="button"
-            onClick={handleClick}
+            type={type}
+            onClick={type === "submit" ? handleClick : undefined}
+            disabled={isDisabled}
         >
             {
                 !isSuccessState && (
