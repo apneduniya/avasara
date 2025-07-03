@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { WaitlistSchema, IWaitlistSchema } from "@/schema/waitlist";
+import { WaitlistService } from "@/services/waitlist";
 
 import { cn } from "@/lib/utils";
 
@@ -18,9 +19,12 @@ export default function WaitlistForm({ className = "" }: { className?: string })
     const [startAnimation, setStartAnimation] = useState(false);
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
+    const waitlistService = new WaitlistService();
+
     const {
         register,
         handleSubmit,
+        setError,
         formState: { errors },
     } = useForm<IWaitlistSchema>({
         resolver: zodResolver(WaitlistSchema),
@@ -32,11 +36,22 @@ export default function WaitlistForm({ className = "" }: { className?: string })
     };
 
     // This function will be called when the form is submitted
-    const onSubmit = (data: IWaitlistSchema) => {
-        setIsFormSubmitted(true);
-        setStartAnimation(true);
+    const onSubmit = async (data: IWaitlistSchema) => {
+        try {
+            setIsFormSubmitted(true);
+            setStartAnimation(true);
 
-        console.log(data.email);
+            const response = await waitlistService.joinWaitlist(data.email);
+
+            if (!response.success) {
+                setError("email", { message: response.error });
+                return;
+            }
+
+        } catch (error) {
+            console.error(error);
+            setError("email", { message: "Something went wrong. Contact @thatsmeadarsh" });
+        }
     };
 
     return (
